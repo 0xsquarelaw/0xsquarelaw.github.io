@@ -3,10 +3,13 @@ document.addEventListener('DOMContentLoaded', function() {
     const themeToggle = document.querySelector('.theme-toggle');
     const body = document.body;
     
-    // Check for saved theme preference
-    if (localStorage.getItem('theme') === 'dark') {
+    // Check for saved theme preference or default to dark mode
+    if (localStorage.getItem('theme') !== 'light') {
         body.classList.add('dark-mode');
         themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+        localStorage.setItem('theme', 'dark');
+    } else {
+        themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
     }
     
     themeToggle.addEventListener('click', function() {
