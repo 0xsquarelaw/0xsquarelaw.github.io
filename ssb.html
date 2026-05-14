@@ -1,0 +1,955 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Indian Army SSB Study Dashboard</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        olive: { 50: '#f4f7f0', 100: '#e4ecdb', 500: '#5c7a36', 700: '#3B5323', 900: '#2a3b19' },
+                        khaki: { 100: '#fdf6e3', 500: '#c3b091', 700: '#8c7a5d' },
+                        steel: { 500: '#4682b4', 700: '#315b7e' },
+                        dark: '#1a1a1a'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 350px;
+            max-height: 400px;
+        }
+
+        .perspective-1000 { perspective: 1000px; }
+        .transform-style-3d { transform-style: preserve-3d; }
+        .backface-hidden { backface-visibility: hidden; }
+        .rotate-y-180 { transform: rotateY(180deg); }
+        .flip-card-inner { transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1); }
+        .flipped .flip-card-inner { transform: rotateY(180deg); }
+
+        .nav-item.active {
+            background-color: #f4f7f0;
+            color: #3B5323;
+            border-right: 4px solid #3B5323;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 h-screen flex overflow-hidden font-sans">
+
+    <aside class="w-64 bg-white border-r border-gray-200 flex flex-col z-20 shadow-sm hidden md:flex shrink-0">
+        <div class="p-6 border-b border-gray-100">
+            <div class="flex items-center gap-2 text-olive-700 font-bold text-xl">
+                <span>⚔️</span> SSB Quick-Prep
+            </div>
+            <p class="text-xs text-gray-500 mt-1 uppercase tracking-wider font-semibold">Tri-Service Module</p>
+        </div>
+        <nav class="flex-1 overflow-y-auto py-2" id="sidebar-nav">
+            <div class="px-6 py-2 text-xs font-bold text-gray-400 uppercase tracking-wider">Military Structure</div>
+            <button onclick="navigate('combat-arms')" class="nav-item active w-full text-left px-6 py-2.5 text-sm text-gray-600 hover:bg-gray-50 transition-colors flex items-center gap-3">
+                <span>🛡️</span> Combat & Support
+            </button>
+            <button onclick="navigate('formations')" class="nav-item w-full text-left px-6 py-2.5 text-sm text-gray-600 hover:bg-gray-50 transition-colors flex items-center gap-3">
+                <span>📊</span> Formations & Ranks
+            </button>
+            <button onclick="navigate('commands-wars')" class="nav-item w-full text-left px-6 py-2.5 text-sm text-gray-600 hover:bg-gray-50 transition-colors flex items-center gap-3">
+                <span>🗺️</span> Commands & Wars
+            </button>
+            <button onclick="navigate('sister-services')" class="nav-item w-full text-left px-6 py-2.5 text-sm text-gray-600 hover:bg-gray-50 transition-colors flex items-center gap-3">
+                <span>✈️</span> Sister Services
+            </button>
+
+            <div class="px-6 py-2 mt-2 border-t border-gray-100 text-xs font-bold text-gray-400 uppercase tracking-wider">SSB Assessment & Policy</div>
+            <button onclick="navigate('ssb-process')" class="nav-item w-full text-left px-6 py-2.5 text-sm text-gray-600 hover:bg-gray-50 transition-colors flex items-center gap-3">
+                <span>📋</span> The SSB Process & OLQs
+            </button>
+            <button onclick="navigate('detailed-olq')" class="nav-item w-full text-left px-6 py-2.5 text-sm text-gray-600 hover:bg-gray-50 transition-colors flex items-center gap-3">
+                <span>🧠</span> Detailed OLQs
+            </button>
+            <button onclick="navigate('leadership-policy')" class="nav-item w-full text-left px-6 py-2.5 text-sm text-gray-600 hover:bg-gray-50 transition-colors flex items-center gap-3">
+                <span>🎖️</span> Leadership & Policies
+            </button>
+            <button onclick="navigate('defence-tech')" class="nav-item w-full text-left px-6 py-2.5 text-sm text-gray-600 hover:bg-gray-50 transition-colors flex items-center gap-3">
+                <span>🚀</span> CAPF & Def-Tech
+            </button>
+
+            <div class="px-6 py-2 mt-2 border-t border-gray-100 text-xs font-bold text-gray-400 uppercase tracking-wider">Practice</div>
+            <button onclick="navigate('flashcards')" class="nav-item w-full text-left px-6 py-2.5 text-sm text-gray-600 hover:bg-gray-50 transition-colors flex items-center gap-3">
+                <span>⚡</span> Quick Flashcards
+            </button>
+        </nav>
+    </aside>
+
+    <div class="md:hidden fixed top-0 w-full bg-white border-b border-gray-200 z-30 px-4 py-3 flex justify-between items-center shadow-sm">
+        <div class="text-olive-700 font-bold text-lg">⚔️ SSB Prep</div>
+        <select onchange="navigate(this.value)" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-olive-500 focus:border-olive-500 block p-2">
+            <option value="combat-arms">Combat & Support Arms</option>
+            <option value="formations">Formations & Ranks</option>
+            <option value="commands-wars">Commands & Wars</option>
+            <option value="sister-services">Sister Services</option>
+            <option value="ssb-process">SSB Process & OLQs</option>
+            <option value="detailed-olq">Detailed OLQs</option>
+            <option value="leadership-policy">Leadership, Awards & Policy</option>
+            <option value="defence-tech">CAPF & Def-Tech</option>
+            <option value="flashcards">Quick Flashcards</option>
+        </select>
+    </div>
+
+    <main class="flex-1 h-full overflow-y-auto bg-gray-50 pt-16 md:pt-0 relative">
+        <div class="max-w-6xl mx-auto p-6 md:p-10 pb-20">
+
+            <section id="combat-arms" class="view-section block animate-fade-in">
+                <header class="mb-8">
+                    <div class="flex items-center gap-3 mb-2">
+                        <h1 class="text-3xl font-bold text-gray-900">Combat & Support Arms</h1>
+                        <span class="bg-olive-100 text-olive-800 text-xs font-bold px-2.5 py-1 rounded">Motto: Sewa Paramo Dharma (Service Before Self)</span>
+                    </div>
+                    <p class="text-gray-600 max-w-3xl">Explore the core fighting elements of the Indian Army and the vital support arms that sustain them in battle.</p>
+                </header>
+
+                <h2 class="text-xs font-bold uppercase tracking-widest text-gray-500 mb-4 border-b pb-2">Core Combat Arms</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-lg font-bold text-olive-700 flex items-center gap-2"><span>🎯</span> Infantry</h3>
+                            <span class="px-2 py-1 bg-olive-50 text-olive-700 text-xs font-bold rounded-md">Queen of the Battlefield</span>
+                        </div>
+                        <ul class="space-y-2 text-sm text-gray-700 mb-4">
+                            <li><strong class="text-gray-900">Role:</strong> Close with, capture, and hold ground.</li>
+                            <li><strong class="text-gray-900">Motto Focus:</strong> Fight to the last man and last round.</li>
+                            <li><strong class="text-gray-900">Key Assets:</strong> SIG 716, AK-203, Sako TRG 42 Snipers, ATGM.</li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-lg font-bold text-olive-700 flex items-center gap-2"><span>🛡️</span> Armoured & Mech Inf</h3>
+                            <span class="px-2 py-1 bg-olive-50 text-olive-700 text-xs font-bold rounded-md">Shock & Awe</span>
+                        </div>
+                        <ul class="space-y-2 text-sm text-gray-700 mb-4">
+                            <li><strong class="text-gray-900">Role:</strong> Fast, protected mobility and heavy firepower.</li>
+                            <li><strong class="text-gray-900">Tanks:</strong> T-90 Bhishma (Offensive), T-72 Ajeya, Arjun MBT.</li>
+                            <li><strong class="text-gray-900">IFV:</strong> BMP-2 Sarath (Mechanised Infantry).</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h2 class="text-xs font-bold uppercase tracking-widest text-gray-500 mb-4 border-b pb-2">Combat Support & Logistics</h2>
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                    <div class="flex flex-wrap border-b border-gray-200 bg-gray-50 p-2 gap-2" id="support-tabs">
+                        <button onclick="switchTab('artillery')" class="tab-btn active px-4 py-2 rounded-md text-sm font-medium bg-white shadow-sm text-olive-700 border border-gray-200">Artillery</button>
+                        <button onclick="switchTab('engineers')" class="tab-btn px-4 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-100">Engineers</button>
+                        <button onclick="switchTab('aad')" class="tab-btn px-4 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-100">Air Defence</button>
+                        <button onclick="switchTab('aviation')" class="tab-btn px-4 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-100">Aviation & Signals</button>
+                    </div>
+                    
+                    <div class="p-6 h-auto min-h-[250px]">
+                        <div id="tab-artillery" class="tab-content block animate-fade-in">
+                            <h3 class="text-lg font-bold text-gray-900 mb-3">Regiment of Artillery ("God of War")</h3>
+                            <div class="grid grid-cols-2 gap-4 text-sm">
+                                <div class="bg-gray-50 p-3 rounded border border-gray-100"><strong>M777 Howitzer:</strong> Ultra-light, heli-transportable.</div>
+                                <div class="bg-gray-50 p-3 rounded border border-gray-100"><strong>K9 Vajra:</strong> Self-propelled tracked gun.</div>
+                                <div class="bg-gray-50 p-3 rounded border border-gray-100"><strong>Bofors:</strong> Proven in Kargil war.</div>
+                                <div class="bg-gray-50 p-3 rounded border border-gray-100"><strong>Pinaka MBRL:</strong> Area denial rocket launcher.</div>
+                            </div>
+                        </div>
+
+                        <div id="tab-engineers" class="tab-content hidden animate-fade-in">
+                            <h3 class="text-lg font-bold text-gray-900 mb-3">Corps of Engineers</h3>
+                            <ul class="list-disc pl-5 space-y-2 text-sm text-gray-700 mb-4">
+                                <li><strong>Mobility:</strong> Bridging rivers, clearing minefields to advance.</li>
+                                <li><strong>Counter-Mobility:</strong> Laying minefields, demolishing bridges to stop the enemy.</li>
+                                <li><strong>Survivability:</strong> Building fortifications and bunkers to protect forces.</li>
+                            </ul>
+                        </div>
+
+                        <div id="tab-aad" class="tab-content hidden animate-fade-in">
+                            <h3 class="text-lg font-bold text-gray-900 mb-3">Army Air Defence (AAD)</h3>
+                            <ul class="list-disc pl-5 space-y-2 text-sm text-gray-700">
+                                <li><strong>Akash:</strong> Indigenous Surface-to-Air Missile (SAM) system.</li>
+                                <li><strong>ZSU-23-4 Shilka:</strong> Self-propelled radar-guided AA gun (Upgraded with AESA).</li>
+                                <li><strong>ZU-23-2:</strong> Towed twin-barrel anti-aircraft gun.</li>
+                                <li><strong>Igla-S:</strong> Man-portable air-defense system (MANPADS).</li>
+                            </ul>
+                        </div>
+
+                        <div id="tab-aviation" class="tab-content hidden animate-fade-in">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <h3 class="text-lg font-bold text-gray-900 mb-2">Army Aviation</h3>
+                                    <ul class="list-disc pl-5 space-y-1 text-sm text-gray-700">
+                                        <li>ALH Dhruv (Advanced Light Helicopter)</li>
+                                        <li>LCH Prachand (Light Combat Helicopter)</li>
+                                        <li>AH-64E Apache (Attack Helicopter)</li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <h3 class="text-lg font-bold text-gray-900 mb-2">Corps of Signals & Logistics</h3>
+                                    <p class="text-sm text-gray-700 mb-1"><strong>Signals:</strong> Comm. & Electronic Warfare (EW).</p>
+                                    <p class="text-sm text-gray-700 mb-1"><strong>ASC:</strong> Rations & Transport.</p>
+                                    <p class="text-sm text-gray-700 mb-1"><strong>AOC:</strong> Ammunition & Vehicles.</p>
+                                    <p class="text-sm text-gray-700"><strong>EME:</strong> Repair & Recovery.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="formations" class="view-section hidden animate-fade-in">
+                <header class="mb-8">
+                    <h1 class="text-3xl font-bold text-gray-900 mb-2">Formations & Ranks</h1>
+                    <p class="text-gray-600 max-w-3xl">Understand the structural hierarchy of the Indian Army and the complete rank structure from Sepoy to General.</p>
+                </header>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 flex flex-col">
+                        <h2 class="text-lg font-bold text-gray-900 mb-1">Formation Troop Strengths</h2>
+                        <div class="chart-container flex-1">
+                            <canvas id="formationsChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                        <h2 class="text-lg font-bold text-gray-900 mb-4">Command Structure Breakdown</h2>
+                        <div class="space-y-3">
+                            <div class="flex items-center justify-between p-2 hover:bg-gray-50 rounded border-b border-gray-100"><div><span class="font-bold text-gray-800">Section</span> <span class="text-xs text-gray-500 ml-2">~10 men</span></div><div class="text-sm text-olive-700 font-medium">Havildar</div></div>
+                            <div class="flex items-center justify-between p-2 hover:bg-gray-50 rounded border-b border-gray-100"><div><span class="font-bold text-gray-800">Platoon</span> <span class="text-xs text-gray-500 ml-2">3 Sections (~30)</span></div><div class="text-sm text-olive-700 font-medium">JCO</div></div>
+                            <div class="flex items-center justify-between p-2 hover:bg-gray-50 rounded border-b border-gray-100"><div><span class="font-bold text-gray-800">Company</span> <span class="text-xs text-gray-500 ml-2">3 Platoons (~120)</span></div><div class="text-sm text-olive-700 font-medium">Major / Lt. Col</div></div>
+                            <div class="flex items-center justify-between p-2 hover:bg-gray-50 rounded border-b border-gray-100"><div><span class="font-bold text-gray-800">Battalion</span> <span class="text-xs text-gray-500 ml-2">4 Companies (~800)</span></div><div class="text-sm text-olive-700 font-medium">Colonel</div></div>
+                            <div class="flex items-center justify-between p-2 hover:bg-gray-50 rounded border-b border-gray-100"><div><span class="font-bold text-gray-800">Brigade</span> <span class="text-xs text-gray-500 ml-2">3 Battalions (~3000)</span></div><div class="text-sm text-olive-700 font-medium">Brigadier</div></div>
+                            <div class="flex items-center justify-between p-2 hover:bg-gray-50 rounded border-b border-gray-100"><div><span class="font-bold text-gray-800">Division</span> <span class="text-xs text-gray-500 ml-2">3 Brigades (~15k)</span></div><div class="text-sm text-olive-700 font-medium">Major General</div></div>
+                            <div class="flex items-center justify-between p-2 hover:bg-gray-50 rounded border-b border-gray-100"><div><span class="font-bold text-gray-800">Corps</span> <span class="text-xs text-gray-500 ml-2">3 Divisions</span></div><div class="text-sm text-olive-700 font-medium">Lieutenant General</div></div>
+                            <div class="flex items-center justify-between p-2 hover:bg-gray-50 rounded"><div><span class="font-bold text-gray-800">Command</span> <span class="text-xs text-gray-500 ml-2">2+ Corps</span></div><div class="text-sm text-olive-700 font-medium">Lt Gen (GOC-in-C)</div></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden mb-8">
+                    <div class="p-4 border-b border-gray-200 bg-gray-50">
+                        <h2 class="text-lg font-bold text-gray-900">Commissioned Officer Ranks (Ascending)</h2>
+                    </div>
+                    <div class="grid grid-cols-3 md:grid-cols-5 gap-4 p-6">
+                        <div class="text-center p-3 border border-gray-100 rounded-lg bg-gray-50">1. Lieutenant</div>
+                        <div class="text-center p-3 border border-gray-100 rounded-lg bg-gray-50">2. Captain</div>
+                        <div class="text-center p-3 border border-gray-100 rounded-lg bg-gray-50">3. Major</div>
+                        <div class="text-center p-3 border border-gray-100 rounded-lg bg-gray-50">4. Lt. Colonel</div>
+                        <div class="text-center p-3 border border-gray-100 rounded-lg bg-olive-50 font-bold border-olive-200 text-olive-700">5. Colonel</div>
+                        <div class="text-center p-3 border border-gray-100 rounded-lg bg-gray-50">6. Brigadier</div>
+                        <div class="text-center p-3 border border-gray-100 rounded-lg bg-gray-50">7. Major General</div>
+                        <div class="text-center p-3 border border-gray-100 rounded-lg bg-gray-50">8. Lt. General</div>
+                        <div class="text-center p-3 border border-gray-100 rounded-lg bg-gray-50">9. General</div>
+                        <div class="text-center p-3 border border-gray-100 rounded-lg bg-khaki-100 border-khaki-500/30 font-bold text-khaki-900">Field Marshal*</div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                    <div class="p-4 border-b border-gray-200 bg-gray-50">
+                        <h2 class="text-lg font-bold text-gray-900">JCO & NCO Ranks (Ascending)</h2>
+                    </div>
+                    <div class="p-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            <div>
+                                <h3 class="text-sm font-bold uppercase text-olive-700 mb-3 border-b pb-1">Non-Commissioned Officers & ORs</h3>
+                                <div class="space-y-2">
+                                    <div class="flex justify-between p-2 bg-gray-50 rounded border border-gray-100"><span>1. Sepoy</span> <span class="text-gray-500 text-sm">Plain shoulder badge</span></div>
+                                    <div class="flex justify-between p-2 bg-gray-50 rounded border border-gray-100"><span>2. Lance Naik</span> <span class="text-gray-500 text-sm">1 Chevron</span></div>
+                                    <div class="flex justify-between p-2 bg-gray-50 rounded border border-gray-100"><span>3. Naik</span> <span class="text-gray-500 text-sm">2 Chevrons</span></div>
+                                    <div class="flex justify-between p-2 bg-gray-50 rounded border border-gray-100"><span>4. Havildar</span> <span class="text-gray-500 text-sm">3 Chevrons</span></div>
+                                </div>
+                            </div>
+                            <div>
+                                <h3 class="text-sm font-bold uppercase text-olive-700 mb-3 border-b pb-1">Junior Commissioned Officers (JCOs)</h3>
+                                <div class="space-y-2">
+                                    <div class="flex justify-between p-2 bg-gray-50 rounded border border-gray-100"><span>5. Naib Subedar</span> <span class="text-gray-500 text-sm">1 Star + Stripe</span></div>
+                                    <div class="flex justify-between p-2 bg-gray-50 rounded border border-gray-100"><span>6. Subedar</span> <span class="text-gray-500 text-sm">2 Stars + Stripe</span></div>
+                                    <div class="flex justify-between p-2 bg-gray-50 rounded border border-gray-100 font-bold text-olive-800"><span>7. Subedar Major</span> <span class="text-gray-500 text-sm font-normal">Ashoka Lion + Stripe</span></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="commands-wars" class="view-section hidden animate-fade-in">
+                 <header class="mb-8">
+                    <h1 class="text-3xl font-bold text-gray-900 mb-2">Commands & Major Conflicts</h1>
+                    <p class="text-gray-600 max-w-3xl">Geographic distribution of the 7 operational commands and a brief overview of post-independence conflicts.</p>
+                </header>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                        <h2 class="text-xl font-bold text-olive-700 mb-4 border-b border-gray-100 pb-2">The 7 Commands</h2>
+                        <ul class="space-y-4">
+                            <li class="flex items-start gap-3"><div class="w-8 h-8 rounded-full bg-olive-100 text-olive-700 flex items-center justify-center font-bold shrink-0">N</div><div><div class="font-bold text-gray-900">Northern Command</div><div class="text-sm text-gray-600">HQ: Udhampur (J&K)</div></div></li>
+                            <li class="flex items-start gap-3"><div class="w-8 h-8 rounded-full bg-olive-100 text-olive-700 flex items-center justify-center font-bold shrink-0">W</div><div><div class="font-bold text-gray-900">Western Command</div><div class="text-sm text-gray-600">HQ: Chandimandir (Panchkula, Haryana)</div></div></li>
+                            <li class="flex items-start gap-3"><div class="w-8 h-8 rounded-full bg-olive-100 text-olive-700 flex items-center justify-center font-bold shrink-0">SW</div><div><div class="font-bold text-gray-900">South Western Command</div><div class="text-sm text-gray-600">HQ: Jaipur (Rajasthan)</div></div></li>
+                            <li class="flex items-start gap-3"><div class="w-8 h-8 rounded-full bg-olive-100 text-olive-700 flex items-center justify-center font-bold shrink-0">S</div><div><div class="font-bold text-gray-900">Southern Command</div><div class="text-sm text-gray-600">HQ: Pune (Maharashtra)</div></div></li>
+                            <li class="flex items-start gap-3"><div class="w-8 h-8 rounded-full bg-olive-100 text-olive-700 flex items-center justify-center font-bold shrink-0">E</div><div><div class="font-bold text-gray-900">Eastern Command</div><div class="text-sm text-gray-600">HQ: Kolkata (West Bengal)</div></div></li>
+                            <li class="flex items-start gap-3"><div class="w-8 h-8 rounded-full bg-olive-100 text-olive-700 flex items-center justify-center font-bold shrink-0">C</div><div><div class="font-bold text-gray-900">Central Command</div><div class="text-sm text-gray-600">HQ: Lucknow (UP)</div></div></li>
+                            <li class="flex items-start gap-3"><div class="w-8 h-8 rounded-full bg-steel-500 text-white flex items-center justify-center font-bold shrink-0">AR</div><div><div class="font-bold text-gray-900">ARTRAC (Training Command)</div><div class="text-sm text-gray-600">HQ: Shimla (HP)</div></div></li>
+                        </ul>
+                    </div>
+                    <div class="space-y-6">
+                        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                            <h2 class="text-xl font-bold text-steel-700 mb-4 border-b border-gray-100 pb-2">Major Wars & Operations</h2>
+                            <div class="border-l-2 border-steel-500 pl-4 space-y-4">
+                                <div><div class="font-bold text-gray-900">1947-48: First Kashmir War</div><div class="text-xs text-gray-500">Post-independence tribal invasion.</div></div>
+                                <div><div class="font-bold text-gray-900">1962: Sino-Indian War</div><div class="text-xs text-gray-500">High-altitude conflict over Aksai Chin/NEFA borders. Sparked major Indian military modernization.</div></div>
+                                <div><div class="font-bold text-gray-900">1965: Indo-Pakistani War</div><div class="text-xs text-gray-500">Response to Operation Gibraltar; massive tank battles.</div></div>
+                                <div><div class="font-bold text-gray-900">1971: Bangladesh Liberation War</div><div class="text-xs text-gray-500">Decisive victory led by Field Marshal Sam Manekshaw.</div></div>
+                                <div><div class="font-bold text-gray-900">1999: Kargil War (Op Vijay)</div><div class="text-xs text-gray-500">High-altitude warfare to evict intruders from peaks.</div></div>
+                                <div class="bg-khaki-100 p-3 rounded-lg border border-khaki-300">
+                                    <div class="font-bold text-khaki-900">May 2025: Operation Sindoor</div>
+                                    <div class="text-xs text-khaki-800 mt-1">A highly critical modern case study: Launched in response to the Pahalgam terror attack. A massive, tri-service integrated campaign targeting LeT/JeM infrastructure deep in Pakistan and PoK.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+<section id="sister-services" class="view-section hidden animate-fade-in">
+                <header class="mb-8">
+                    <h1 class="text-3xl font-bold text-gray-900 mb-2">Sister Services (Tri-Service Awareness)</h1>
+                    <p class="text-gray-600 max-w-3xl">Interviewing Officers routinely test your knowledge of the IAF and Navy to gauge your broader passion for the Armed Forces and modern military integration.</p>
+                </header>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                    
+                    <div class="bg-white rounded-xl shadow-sm border border-blue-200 p-6 hover:shadow-md transition-shadow">
+                        <div class="flex items-center justify-between mb-4 border-b border-gray-100 pb-3">
+                            <h2 class="text-xl font-bold text-blue-800 flex items-center gap-2">🦅 Indian Air Force</h2>
+                            <span class="px-2 py-1 bg-blue-50 text-blue-700 text-xs font-bold rounded-md italic">Nabha Sparsham Deeptam (Touch the Sky with Glory)</span>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <h3 class="text-sm font-bold uppercase text-gray-500 mb-2">Equivalent Ranks (vs Army)</h3>
+                            <div class="bg-gray-50 rounded-lg p-3 text-sm space-y-1 border border-gray-100">
+                                <div class="flex justify-between"><span class="text-gray-600">Lieutenant</span> <span class="font-medium text-blue-900">Flying Officer</span></div>
+                                <div class="flex justify-between"><span class="text-gray-600">Captain</span> <span class="font-medium text-blue-900">Flight Lieutenant</span></div>
+                                <div class="flex justify-between"><span class="text-gray-600">Major</span> <span class="font-medium text-blue-900">Squadron Leader</span></div>
+                                <div class="flex justify-between"><span class="text-gray-600">Lt. Colonel</span> <span class="font-medium text-blue-900">Wing Commander</span></div>
+                                <div class="flex justify-between bg-blue-100 px-1 rounded"><span class="text-gray-800 font-medium">Colonel</span> <span class="font-bold text-blue-900">Group Captain</span></div>
+                                <div class="flex justify-between"><span class="text-gray-600">Brigadier</span> <span class="font-medium text-blue-900">Air Commodore</span></div>
+                                <div class="flex justify-between"><span class="text-gray-600">Major General</span> <span class="font-medium text-blue-900">Air Vice Marshal</span></div>
+                                <div class="flex justify-between"><span class="text-gray-600">Lt. General</span> <span class="font-medium text-blue-900">Air Marshal</span></div>
+                                <div class="flex justify-between"><span class="text-gray-600">General</span> <span class="font-medium text-blue-900">Air Chief Marshal</span></div>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <h3 class="text-sm font-bold uppercase text-gray-500 mb-2">The 7 Commands</h3>
+                            <ul class="text-sm text-gray-700 space-y-1 pl-2">
+                                <li><strong>WAC (Western):</strong> New Delhi</li>
+                                <li><strong>SWAC (South Western):</strong> Gandhinagar</li>
+                                <li><strong>CAC (Central):</strong> Prayagraj</li>
+                                <li><strong>EAC (Eastern):</strong> Shillong</li>
+                                <li><strong>SAC (Southern):</strong> Thiruvananthapuram</li>
+                                <li><strong>TC (Training):</strong> Bengaluru</li>
+                                <li><strong>MC (Maintenance):</strong> Nagpur</li>
+                            </ul>
+                        </div>
+
+                        <div>
+                            <h3 class="text-sm font-bold uppercase text-gray-500 mb-2">Key Inventory</h3>
+                            <ul class="text-sm text-gray-700 space-y-1 pl-2">
+                                <li><strong>Fighters:</strong> Rafale, Su-30MKI, LCA Tejas.</li>
+                                <li><strong>Transports:</strong> C-17 Globemaster, C-130J.</li>
+                                <li><strong>Helicopters:</strong> AH-64E Apache, CH-47F Chinook.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-xl shadow-sm border border-cyan-200 p-6 hover:shadow-md transition-shadow">
+                        <div class="flex items-center justify-between mb-4 border-b border-gray-100 pb-3">
+                            <h2 class="text-xl font-bold text-cyan-800 flex items-center gap-2">⚓ Indian Navy</h2>
+                            <span class="px-2 py-1 bg-cyan-50 text-cyan-700 text-xs font-bold rounded-md italic">Sam No Varunah (May the Lord of the Water be auspicious unto us)</span>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <h3 class="text-sm font-bold uppercase text-gray-500 mb-2">Equivalent Ranks (vs Army)</h3>
+                            <div class="bg-gray-50 rounded-lg p-3 text-sm space-y-1 border border-gray-100">
+                                <div class="flex justify-between"><span class="text-gray-600">Lieutenant</span> <span class="font-medium text-cyan-900">Sub Lieutenant</span></div>
+                                <div class="flex justify-between"><span class="text-gray-600">Captain</span> <span class="font-medium text-cyan-900">Lieutenant</span></div>
+                                <div class="flex justify-between"><span class="text-gray-600">Major</span> <span class="font-medium text-cyan-900">Lieutenant Commander</span></div>
+                                <div class="flex justify-between"><span class="text-gray-600">Lt. Colonel</span> <span class="font-medium text-cyan-900">Commander</span></div>
+                                <div class="flex justify-between bg-cyan-100 px-1 rounded"><span class="text-gray-800 font-medium">Colonel</span> <span class="font-bold text-cyan-900">Captain</span></div>
+                                <div class="flex justify-between"><span class="text-gray-600">Brigadier</span> <span class="font-medium text-cyan-900">Commodore</span></div>
+                                <div class="flex justify-between"><span class="text-gray-600">Major General</span> <span class="font-medium text-cyan-900">Rear Admiral</span></div>
+                                <div class="flex justify-between"><span class="text-gray-600">Lt. General</span> <span class="font-medium text-cyan-900">Vice Admiral</span></div>
+                                <div class="flex justify-between"><span class="text-gray-600">General</span> <span class="font-medium text-cyan-900">Admiral</span></div>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <h3 class="text-sm font-bold uppercase text-gray-500 mb-2">The 3 Commands</h3>
+                            <ul class="text-sm text-gray-700 space-y-1 pl-2">
+                                <li><strong>WNC (Western):</strong> Mumbai (Sword Arm)</li>
+                                <li><strong>ENC (Eastern):</strong> Visakhapatnam</li>
+                                <li><strong>SNC (Southern - Training):</strong> Kochi</li>
+                            </ul>
+                        </div>
+
+                        <div>
+                            <h3 class="text-sm font-bold uppercase text-gray-500 mb-2">Key Fleet</h3>
+                            <ul class="text-sm text-gray-700 space-y-1 pl-2">
+                                <li><strong>Carriers:</strong> INS Vikramaditya, INS Vikrant.</li>
+                                <li><strong>SSBN (Nuclear Subs):</strong> INS Arihant, INS Arighat.</li>
+                                <li><strong>Destroyers:</strong> Visakhapatnam & Kolkata class.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-steel-50 rounded-xl border border-steel-200 p-6">
+                    <div class="flex items-start gap-4">
+                        <div class="text-3xl">⚔️</div>
+                        <div>
+                            <h2 class="text-lg font-bold text-steel-800 mb-1">The Tri-Service Ace: Theaterisation</h2>
+                            <p class="text-sm text-steel-700 mb-3">The ongoing process to integrate the Army, Navy, and Air Force into unified "Theatre Commands" under single operational commanders, rather than fighting as separate entities. This is a highly probable interview topic.</p>
+                            <div class="bg-white p-3 rounded-md border border-steel-100 text-sm">
+                                <ul class="list-disc pl-5 space-y-1 text-gray-700">
+                                    <li><strong>Current Tri-Service Commands:</strong> Andaman and Nicobar Command (ANC) & Strategic Forces Command (SFC - Nuclear).</li>
+                                    <li><strong>Chief of Defence Staff (CDS):</strong> The primary role of the CDS is to facilitate this integration and act as the principal military advisor to the Defence Minister.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="ssb-process" class="view-section hidden animate-fade-in">
+                <header class="mb-8">
+                    <h1 class="text-3xl font-bold text-gray-900 mb-2">The SSB Process & 15 OLQs</h1>
+                    <p class="text-gray-600 max-w-3xl">This is how you are evaluated. The entire 5-day process is designed to test your personality against the 15 Officer-Like Qualities.</p>
+                </header>
+
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                    <div class="lg:col-span-5 space-y-4">
+                        <h2 class="text-xl font-bold text-olive-700 mb-4 border-b border-gray-200 pb-2">The 5-Day Evaluation</h2>
+                        
+                        <div class="bg-white p-4 rounded-xl border border-red-200 shadow-sm relative overflow-hidden">
+                            <div class="absolute top-0 left-0 w-1 h-full bg-red-500"></div>
+                            <h3 class="font-bold text-gray-900">Day 1: Screening (Stage I)</h3>
+                            <ul class="text-sm text-gray-600 mt-2 space-y-1">
+                                <li>• <strong>OIR Test:</strong> Verbal & Non-Verbal reasoning.</li>
+                                <li>• <strong>PPDT:</strong> Picture Perception & Description Test (Write a story, narrate it, and do a Group Discussion).</li>
+                                <li class="text-red-600 font-semibold text-xs mt-1">*Candidates who fail leave today.</li>
+                            </ul>
+                        </div>
+
+                        <div class="bg-white p-4 rounded-xl border border-blue-200 shadow-sm relative overflow-hidden">
+                            <div class="absolute top-0 left-0 w-1 h-full bg-blue-500"></div>
+                            <h3 class="font-bold text-gray-900">Day 2: Psychological Tests</h3>
+                            <ul class="text-sm text-gray-600 mt-2 space-y-1">
+                                <li>• <strong>TAT:</strong> Thematic Apperception Test (12 Pictures).</li>
+                                <li>• <strong>WAT:</strong> Word Association Test (60 Words, 15s each).</li>
+                                <li>• <strong>SRT:</strong> Situation Reaction Test (60 situations, 30 min).</li>
+                                <li>• <strong>SDT:</strong> Self-Description Test.</li>
+                            </ul>
+                        </div>
+
+                        <div class="bg-white p-4 rounded-xl border border-green-200 shadow-sm relative overflow-hidden">
+                            <div class="absolute top-0 left-0 w-1 h-full bg-green-500"></div>
+                            <h3 class="font-bold text-gray-900">Days 3 & 4: GTO Tasks</h3>
+                            <ul class="text-sm text-gray-600 mt-2 space-y-1">
+                                <li>• Group Discussion (GD) & Group Planning Exercise (GPE).</li>
+                                <li>• Progressive & Half Group Tasks (PGT/HGT).</li>
+                                <li>• Snake Race (Group Obstacle Race).</li>
+                                <li>• Individual Obstacles (IO) & Lecturette.</li>
+                                <li>• Command Task (CT) & Final Group Task (FGT).</li>
+                            </ul>
+                        </div>
+
+                        <div class="bg-white p-4 rounded-xl border border-purple-200 shadow-sm relative overflow-hidden">
+                            <div class="absolute top-0 left-0 w-1 h-full bg-purple-500"></div>
+                            <h3 class="font-bold text-gray-900">Day 5: The Conference</h3>
+                            <p class="text-sm text-gray-600 mt-2">Final board meeting with all assessors. Results declared.</p>
+                            <p class="text-xs text-gray-500 mt-1 italic">*Personal Interviews (PI) are scheduled in the afternoons of Days 2, 3, or 4.</p>
+                        </div>
+                    </div>
+
+                    <div class="lg:col-span-7">
+                        <h2 class="text-xl font-bold text-steel-700 mb-4 border-b border-gray-200 pb-2">The 15 Officer-Like Qualities (OLQs)</h2>
+                        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                            
+                            <div class="mb-6">
+                                <h3 class="text-sm font-bold uppercase tracking-wider text-khaki-700 mb-3">Factor I: Planning & Organizing (Mind)</h3>
+                                <div class="grid grid-cols-2 gap-3">
+                                    <div class="bg-gray-50 p-2 rounded border border-gray-100 text-sm"><span class="font-bold text-gray-800">1.</span> Effective Intelligence</div>
+                                    <div class="bg-gray-50 p-2 rounded border border-gray-100 text-sm"><span class="font-bold text-gray-800">2.</span> Reasoning Ability</div>
+                                    <div class="bg-gray-50 p-2 rounded border border-gray-100 text-sm"><span class="font-bold text-gray-800">3.</span> Organizing Ability</div>
+                                    <div class="bg-gray-50 p-2 rounded border border-gray-100 text-sm"><span class="font-bold text-gray-800">4.</span> Power of Expression</div>
+                                </div>
+                            </div>
+
+                            <div class="mb-6">
+                                <h3 class="text-sm font-bold uppercase tracking-wider text-khaki-700 mb-3">Factor II: Social Adjustment (Heart)</h3>
+                                <div class="grid grid-cols-2 gap-3">
+                                    <div class="bg-gray-50 p-2 rounded border border-gray-100 text-sm"><span class="font-bold text-gray-800">5.</span> Social Adaptability</div>
+                                    <div class="bg-gray-50 p-2 rounded border border-gray-100 text-sm"><span class="font-bold text-gray-800">6.</span> Cooperation</div>
+                                    <div class="bg-gray-50 p-2 rounded border border-gray-100 text-sm"><span class="font-bold text-gray-800">7.</span> Sense of Responsibility</div>
+                                </div>
+                            </div>
+
+                            <div class="mb-6">
+                                <h3 class="text-sm font-bold uppercase tracking-wider text-khaki-700 mb-3">Factor III: Social Effectiveness (Guts)</h3>
+                                <div class="grid grid-cols-2 gap-3">
+                                    <div class="bg-gray-50 p-2 rounded border border-gray-100 text-sm"><span class="font-bold text-gray-800">8.</span> Initiative</div>
+                                    <div class="bg-gray-50 p-2 rounded border border-gray-100 text-sm"><span class="font-bold text-gray-800">9.</span> Self-Confidence</div>
+                                    <div class="bg-gray-50 p-2 rounded border border-gray-100 text-sm"><span class="font-bold text-gray-800">10.</span> Speed of Decision</div>
+                                    <div class="bg-gray-50 p-2 rounded border border-gray-100 text-sm"><span class="font-bold text-gray-800">11.</span> Ability to Influence</div>
+                                    <div class="bg-gray-50 p-2 rounded border border-gray-100 text-sm"><span class="font-bold text-gray-800">12.</span> Liveliness</div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <h3 class="text-sm font-bold uppercase tracking-wider text-khaki-700 mb-3">Factor IV: Dynamic (Limbs)</h3>
+                                <div class="grid grid-cols-2 gap-3">
+                                    <div class="bg-gray-50 p-2 rounded border border-gray-100 text-sm"><span class="font-bold text-gray-800">13.</span> Determination</div>
+                                    <div class="bg-gray-50 p-2 rounded border border-gray-100 text-sm"><span class="font-bold text-gray-800">14.</span> Courage</div>
+                                    <div class="bg-gray-50 p-2 rounded border border-gray-100 text-sm"><span class="font-bold text-gray-800">15.</span> Stamina</div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="detailed-olq" class="view-section hidden animate-fade-in">
+                <header class="mb-8">
+                    <h1 class="text-3xl font-bold text-gray-900 mb-2">Detailed OLQ Guide</h1>
+                    <p class="text-gray-600 max-w-3xl">Comprehensive breakdown of the 15 Officer Like Qualities, how they are assessed, and how to prepare for them.</p>
+                </header>
+
+                <div class="flex flex-wrap border-b border-gray-200 bg-gray-50 p-2 gap-2 rounded-t-xl">
+                    <button onclick="switchOlqTab('all')" class="olq-tab-btn active px-4 py-2 rounded-md text-sm font-medium bg-white shadow-sm text-olive-700 border border-gray-200">All 15 OLQs</button>
+                    <button onclick="switchOlqTab('groups')" class="olq-tab-btn px-4 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-100">By Group</button>
+                    <button onclick="switchOlqTab('prep')" class="olq-tab-btn px-4 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-100">How to Prepare</button>
+                    <button onclick="switchOlqTab('tests')" class="olq-tab-btn px-4 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-100">SSB Tests</button>
+                </div>
+
+                <div class="bg-white rounded-b-xl shadow-sm border border-t-0 border-gray-200 p-6 min-h-[400px]">
+                    
+                    <div id="olq-tab-all" class="olq-tab-content block animate-fade-in">
+                        <input type="text" placeholder="Search OLQs..." oninput="filterTable('table-all', this.value)" class="w-full p-2.5 mb-4 text-sm bg-gray-50 border border-gray-300 rounded-lg focus:ring-olive-500 focus:border-olive-500 outline-none transition-colors">
+                        <div class="overflow-x-auto">
+                            <table id="table-all" class="w-full text-left text-sm text-gray-700 border-collapse">
+                                <thead class="bg-gray-50 text-gray-600 font-bold border-b border-gray-200">
+                                    <tr><th class="p-3">#</th><th class="p-3">OLQ</th><th class="p-3">Group</th><th class="p-3">What it means</th><th class="p-3">How it shows</th></tr>
+                                </thead>
+                                <tbody class="divide-y divide-gray-100">
+                                    <tr class="hover:bg-gray-50"><td class="p-3">1</td><td class="p-3 font-bold text-gray-900">Effective Intelligence</td><td class="p-3"><span class="px-2 py-1 bg-blue-50 text-blue-700 border border-blue-200 text-xs font-bold rounded-full">Intellectual</span></td><td class="p-3">Practical problem-solving ability, not just IQ</td><td class="p-3">Quick, sensible decisions under pressure; logical reasoning in GD & interviews</td></tr>
+                                    <tr class="hover:bg-gray-50"><td class="p-3">2</td><td class="p-3 font-bold text-gray-900">Reasoning Ability</td><td class="p-3"><span class="px-2 py-1 bg-blue-50 text-blue-700 border border-blue-200 text-xs font-bold rounded-full">Intellectual</span></td><td class="p-3">Ability to draw correct conclusions from data</td><td class="p-3">Sound judgment in TAT/WAT stories; logical GD arguments</td></tr>
+                                    <tr class="hover:bg-gray-50"><td class="p-3">3</td><td class="p-3 font-bold text-gray-900">Organizing Ability</td><td class="p-3"><span class="px-2 py-1 bg-blue-50 text-blue-700 border border-blue-200 text-xs font-bold rounded-full">Intellectual</span></td><td class="p-3">Plan & allocate resources effectively</td><td class="p-3">Taking charge in PGT/HGT with clear task assignment & time management</td></tr>
+                                    <tr class="hover:bg-gray-50"><td class="p-3">4</td><td class="p-3 font-bold text-gray-900">Power of Expression</td><td class="p-3"><span class="px-2 py-1 bg-blue-50 text-blue-700 border border-blue-200 text-xs font-bold rounded-full">Intellectual</span></td><td class="p-3">Communicate ideas clearly & confidently</td><td class="p-3">Clarity in Lecturette, interview, and GD; structured sentences</td></tr>
+                                    <tr class="hover:bg-gray-50"><td class="p-3">5</td><td class="p-3 font-bold text-gray-900">Social Adaptability</td><td class="p-3"><span class="px-2 py-1 bg-green-50 text-green-700 border border-green-200 text-xs font-bold rounded-full">Social</span></td><td class="p-3">Adjust well to new people & environments</td><td class="p-3">Inclusive behavior in group tasks; no cliques; respectful to all</td></tr>
+                                    <tr class="hover:bg-gray-50"><td class="p-3">6</td><td class="p-3 font-bold text-gray-900">Cooperation</td><td class="p-3"><span class="px-2 py-1 bg-green-50 text-green-700 border border-green-200 text-xs font-bold rounded-full">Social</span></td><td class="p-3">Work with others towards shared goals</td><td class="p-3">Volunteering support in GTO tasks; not dominating or withdrawing</td></tr>
+                                    <tr class="hover:bg-gray-50"><td class="p-3">7</td><td class="p-3 font-bold text-gray-900">Sense of Responsibility</td><td class="p-3"><span class="px-2 py-1 bg-green-50 text-green-700 border border-green-200 text-xs font-bold rounded-full">Social</span></td><td class="p-3">Own your actions & duties without excuse</td><td class="p-3">Taking initiative & accountability; not passing blame</td></tr>
+                                    <tr class="hover:bg-gray-50"><td class="p-3">8</td><td class="p-3 font-bold text-gray-900">Stamina</td><td class="p-3"><span class="px-2 py-1 bg-red-50 text-red-700 border border-red-200 text-xs font-bold rounded-full">Physical</span></td><td class="p-3">Sustained physical & mental energy</td><td class="p-3">Active & energetic throughout 5 days; not fading in outdoor tasks</td></tr>
+                                    <tr class="hover:bg-gray-50"><td class="p-3">9</td><td class="p-3 font-bold text-gray-900">Speed of Decision</td><td class="p-3"><span class="px-2 py-1 bg-purple-50 text-purple-700 border border-purple-200 text-xs font-bold rounded-full">Psychological</span></td><td class="p-3">Act promptly when a decision is needed</td><td class="p-3">Not freezing or over-thinking in Snake Race, command task, interviews</td></tr>
+                                    <tr class="hover:bg-gray-50"><td class="p-3">10</td><td class="p-3 font-bold text-gray-900">Ability to Influence the Group</td><td class="p-3"><span class="px-2 py-1 bg-purple-50 text-purple-700 border border-purple-200 text-xs font-bold rounded-full">Psychological</span></td><td class="p-3">Lead others through ideas, not position</td><td class="p-3">Others follow your plan voluntarily in GD, GPE, PGT</td></tr>
+                                    <tr class="hover:bg-gray-50"><td class="p-3">11</td><td class="p-3 font-bold text-gray-900">Liveliness</td><td class="p-3"><span class="px-2 py-1 bg-purple-50 text-purple-700 border border-purple-200 text-xs font-bold rounded-full">Psychological</span></td><td class="p-3">Cheerful, energetic, positive presence</td><td class="p-3">Upbeat demeanor; motivating teammates; maintaining enthusiasm</td></tr>
+                                    <tr class="hover:bg-gray-50"><td class="p-3">12</td><td class="p-3 font-bold text-gray-900">Determination</td><td class="p-3"><span class="px-2 py-1 bg-purple-50 text-purple-700 border border-purple-200 text-xs font-bold rounded-full">Psychological</span></td><td class="p-3">Persist despite obstacles & setbacks</td><td class="p-3">Trying again after failure in obstacles; not giving up in tasks</td></tr>
+                                    <tr class="hover:bg-gray-50"><td class="p-3">13</td><td class="p-3 font-bold text-gray-900">Courage</td><td class="p-3"><span class="px-2 py-1 bg-red-50 text-red-700 border border-red-200 text-xs font-bold rounded-full">Physical</span></td><td class="p-3">Act rightly despite fear or difficulty</td><td class="p-3">Taking the harder option; speaking truth in interviews; attempting risky obstacles</td></tr>
+                                    <tr class="hover:bg-gray-50"><td class="p-3">14</td><td class="p-3 font-bold text-gray-900">Initiative</td><td class="p-3"><span class="px-2 py-1 bg-orange-50 text-orange-700 border border-orange-200 text-xs font-bold rounded-full">Task</span></td><td class="p-3">Start action without being told</td><td class="p-3">Stepping up in leaderless tasks; being first to suggest a plan</td></tr>
+                                    <tr class="hover:bg-gray-50"><td class="p-3">15</td><td class="p-3 font-bold text-gray-900">Self-confidence</td><td class="p-3"><span class="px-2 py-1 bg-orange-50 text-orange-700 border border-orange-200 text-xs font-bold rounded-full">Task</span></td><td class="p-3">Belief in own abilities; not arrogance</td><td class="p-3">Steady eye contact, calm voice, owning mistakes gracefully</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div id="olq-tab-groups" class="olq-tab-content hidden animate-fade-in">
+                        <div class="grid grid-cols-2 gap-4 mb-6">
+                            <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 text-center shadow-sm">
+                                <div class="text-xs text-gray-500 font-bold uppercase tracking-wider mb-1">Total OLQs assessed</div>
+                                <div class="text-3xl font-bold text-olive-700">15</div>
+                            </div>
+                            <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 text-center shadow-sm">
+                                <div class="text-xs text-gray-500 font-bold uppercase tracking-wider mb-1">Assessment duration</div>
+                                <div class="text-3xl font-bold text-olive-700">5 days</div>
+                            </div>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left text-sm text-gray-700 border-collapse">
+                                <thead class="bg-gray-50 text-gray-600 font-bold border-b border-gray-200">
+                                    <tr><th class="p-3">Group</th><th class="p-3">OLQs</th><th class="p-3">Key focus</th><th class="p-3">Primary tests</th></tr>
+                                </thead>
+                                <tbody class="divide-y divide-gray-100">
+                                    <tr class="hover:bg-gray-50"><td class="p-3"><span class="px-2 py-1 bg-blue-50 text-blue-700 border border-blue-200 text-xs font-bold rounded-full">Intellectual</span></td><td class="p-3">Effective Intelligence, Reasoning Ability, Organizing Ability, Power of Expression</td><td class="p-3">Mental sharpness, planning, communication</td><td class="p-3">OIR, PPDT, TAT, Lecturette, Interview</td></tr>
+                                    <tr class="hover:bg-gray-50"><td class="p-3"><span class="px-2 py-1 bg-green-50 text-green-700 border border-green-200 text-xs font-bold rounded-full">Social</span></td><td class="p-3">Social Adaptability, Cooperation, Sense of Responsibility</td><td class="p-3">Teamwork, empathy, accountability</td><td class="p-3">GD, GTO group tasks, Interview</td></tr>
+                                    <tr class="hover:bg-gray-50"><td class="p-3"><span class="px-2 py-1 bg-purple-50 text-purple-700 border border-purple-200 text-xs font-bold rounded-full">Psychological</span></td><td class="p-3">Speed of Decision, Ability to Influence the Group, Liveliness, Determination</td><td class="p-3">Mental toughness, leadership under stress</td><td class="p-3">Command Task, Snake Race, WAT, SRT</td></tr>
+                                    <tr class="hover:bg-gray-50"><td class="p-3"><span class="px-2 py-1 bg-red-50 text-red-700 border border-red-200 text-xs font-bold rounded-full">Physical</span></td><td class="p-3">Stamina, Courage</td><td class="p-3">Physical endurance and bravery</td><td class="p-3">PGT, HGT, Obstacle Course, FGT</td></tr>
+                                    <tr class="hover:bg-gray-50"><td class="p-3"><span class="px-2 py-1 bg-orange-50 text-orange-700 border border-orange-200 text-xs font-bold rounded-full">Task</span></td><td class="p-3">Initiative, Self-confidence</td><td class="p-3">Proactive action, belief in self</td><td class="p-3">All GTO tasks, Personal Interview</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div id="olq-tab-prep" class="olq-tab-content hidden animate-fade-in">
+                        <input type="text" placeholder="Search Preparation tips..." oninput="filterTable('table-prep', this.value)" class="w-full p-2.5 mb-4 text-sm bg-gray-50 border border-gray-300 rounded-lg focus:ring-olive-500 focus:border-olive-500 outline-none transition-colors">
+                        <div class="overflow-x-auto">
+                            <table id="table-prep" class="w-full text-left text-sm text-gray-700 border-collapse">
+                                <thead class="bg-gray-50 text-gray-600 font-bold border-b border-gray-200">
+                                    <tr><th class="p-3">OLQ</th><th class="p-3">Daily practice</th><th class="p-3 text-olive-700">Do this</th><th class="p-3 text-red-700">Avoid this</th></tr>
+                                </thead>
+                                <tbody class="divide-y divide-gray-100">
+                                    <tr class="hover:bg-gray-50"><td class="p-3 font-bold text-gray-900">Effective Intelligence</td><td class="p-3">Solve 5 puzzles or current affairs quizzes daily</td><td class="p-3 text-olive-800 font-medium">Give practical, grounded answers</td><td class="p-3 text-red-800 font-medium">Bookish/theoretical responses</td></tr>
+                                    <tr class="hover:bg-gray-50"><td class="p-3 font-bold text-gray-900">Reasoning Ability</td><td class="p-3">Practice syllogisms, logical puzzles, GK MCQs</td><td class="p-3 text-olive-800 font-medium">State your logic step-by-step</td><td class="p-3 text-red-800 font-medium">Guessing without reasoning</td></tr>
+                                    <tr class="hover:bg-gray-50"><td class="p-3 font-bold text-gray-900">Organizing Ability</td><td class="p-3">Plan your own day; volunteer to manage events</td><td class="p-3 text-olive-800 font-medium">Delegate tasks clearly in group exercises</td><td class="p-3 text-red-800 font-medium">Micromanaging or being passive</td></tr>
+                                    <tr class="hover:bg-gray-50"><td class="p-3 font-bold text-gray-900">Power of Expression</td><td class="p-3">Speak on 2 topics for 3 min daily (mirror practice)</td><td class="p-3 text-olive-800 font-medium">Structured speech: point → reason → example</td><td class="p-3 text-red-800 font-medium">Filler words, rambling</td></tr>
+                                    <tr class="hover:bg-gray-50"><td class="p-3 font-bold text-gray-900">Social Adaptability</td><td class="p-3">Engage with strangers, travel, join clubs</td><td class="p-3 text-olive-800 font-medium">Greet all candidates; adjust to new groups</td><td class="p-3 text-red-800 font-medium">Sticking only to known people</td></tr>
+                                    <tr class="hover:bg-gray-50"><td class="p-3 font-bold text-gray-900">Cooperation</td><td class="p-3">Team sports, group projects, NCC/NSS</td><td class="p-3 text-olive-800 font-medium">Support teammates; share credit</td><td class="p-3 text-red-800 font-medium">Over-dominating or staying silent</td></tr>
+                                    <tr class="hover:bg-gray-50"><td class="p-3 font-bold text-gray-900">Sense of Responsibility</td><td class="p-3">Take on duties at home/college; meet deadlines</td><td class="p-3 text-olive-800 font-medium">Own your mistakes in interview</td><td class="p-3 text-red-800 font-medium">Blame others; make excuses</td></tr>
+                                    <tr class="hover:bg-gray-50"><td class="p-3 font-bold text-gray-900">Stamina</td><td class="p-3">Run 5km, gym, yoga — daily routine for 3+ months</td><td class="p-3 text-olive-800 font-medium">Be physically active through all 5 days</td><td class="p-3 text-red-800 font-medium">Showing tiredness; skipping tasks</td></tr>
+                                    <tr class="hover:bg-gray-50"><td class="p-3 font-bold text-gray-900">Speed of Decision</td><td class="p-3">Practice SRT (60 situations in 30 min) daily</td><td class="p-3 text-olive-800 font-medium">Decide quickly with common sense</td><td class="p-3 text-red-800 font-medium">Long pauses; indecision in tasks</td></tr>
+                                    <tr class="hover:bg-gray-50"><td class="p-3 font-bold text-gray-900">Ability to Influence</td><td class="p-3">Lead group discussions; take on leadership roles</td><td class="p-3 text-olive-800 font-medium">Pitch ideas confidently; build consensus</td><td class="p-3 text-red-800 font-medium">Forcing views; not listening</td></tr>
+                                    <tr class="hover:bg-gray-50"><td class="p-3 font-bold text-gray-900">Liveliness</td><td class="p-3">Play sports, maintain enthusiasm in daily life</td><td class="p-3 text-olive-800 font-medium">Smile, encourage others, stay upbeat</td><td class="p-3 text-red-800 font-medium">Dull, mechanical participation</td></tr>
+                                    <tr class="hover:bg-gray-50"><td class="p-3 font-bold text-gray-900">Determination</td><td class="p-3">Set hard goals and follow through without quitting</td><td class="p-3 text-olive-800 font-medium">Attempt failed obstacles again; persist</td><td class="p-3 text-red-800 font-medium">Giving up after one failure</td></tr>
+                                    <tr class="hover:bg-gray-50"><td class="p-3 font-bold text-gray-900">Courage</td><td class="p-3">Face fears: public speaking, adventure sports</td><td class="p-3 text-olive-800 font-medium">Attempt challenging obstacles; be honest in PI</td><td class="p-3 text-red-800 font-medium">Playing safe; lying or dodging questions</td></tr>
+                                    <tr class="hover:bg-gray-50"><td class="p-3 font-bold text-gray-900">Initiative</td><td class="p-3">Be the first to volunteer in class, sports, activities</td><td class="p-3 text-olive-800 font-medium">Start tasks; suggest plans without waiting</td><td class="p-3 text-red-800 font-medium">Waiting to be told; being reactive</td></tr>
+                                    <tr class="hover:bg-gray-50"><td class="p-3 font-bold text-gray-900">Self-confidence</td><td class="p-3">Affirmations, mock interviews, speak in public</td><td class="p-3 text-olive-800 font-medium">Firm eye contact, calm tone, own your opinions</td><td class="p-3 text-red-800 font-medium">Defensive, nervous, overconfident arrogance</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div id="olq-tab-tests" class="olq-tab-content hidden animate-fade-in">
+                        <input type="text" placeholder="Search SSB Tests..." oninput="filterTable('table-tests', this.value)" class="w-full p-2.5 mb-4 text-sm bg-gray-50 border border-gray-300 rounded-lg focus:ring-olive-500 focus:border-olive-500 outline-none transition-colors">
+                        <div class="overflow-x-auto mb-6">
+                            <table id="table-tests" class="w-full text-left text-sm text-gray-700 border-collapse">
+                                <thead class="bg-gray-50 text-gray-600 font-bold border-b border-gray-200">
+                                    <tr><th class="p-3">Test</th><th class="p-3">Full form</th><th class="p-3">OLQs assessed</th><th class="p-3">Quick tip</th></tr>
+                                </thead>
+                                <tbody class="divide-y divide-gray-100">
+                                    <tr class="hover:bg-gray-50"><td class="p-3 font-bold text-gray-900">OIR</td><td class="p-3">Officer Intelligence Rating</td><td class="p-3 text-xs">Effective Intelligence, Reasoning Ability</td><td class="p-3">Speed + accuracy; practice verbal & non-verbal reasoning</td></tr>
+                                    <tr class="hover:bg-gray-50"><td class="p-3 font-bold text-gray-900">PPDT</td><td class="p-3">Picture Perception & Discussion Test</td><td class="p-3 text-xs">Power of Expression, Influence, Cooperation</td><td class="p-3">Positive story + defend confidently in group</td></tr>
+                                    <tr class="hover:bg-gray-50"><td class="p-3 font-bold text-gray-900">TAT</td><td class="p-3">Thematic Apperception Test</td><td class="p-3 text-xs">Determination, Initiative, Responsibility</td><td class="p-3">Hero-centric stories; positive endings; no supernatural solutions</td></tr>
+                                    <tr class="hover:bg-gray-50"><td class="p-3 font-bold text-gray-900">WAT</td><td class="p-3">Word Association Test</td><td class="p-3 text-xs">Effective Intelligence, Liveliness, Courage</td><td class="p-3">60 words in 30 min — write first positive thought</td></tr>
+                                    <tr class="hover:bg-gray-50"><td class="p-3 font-bold text-gray-900">SRT</td><td class="p-3">Situation Reaction Test</td><td class="p-3 text-xs">Speed of Decision, Courage, Initiative</td><td class="p-3">React practically; be the one who acts, not watches</td></tr>
+                                    <tr class="hover:bg-gray-50"><td class="p-3 font-bold text-gray-900">SD</td><td class="p-3">Self Description</td><td class="p-3 text-xs">Self-confidence, Responsibility</td><td class="p-3">Be consistent with what parents/friends/teachers say about you</td></tr>
+                                    <tr class="hover:bg-gray-50"><td class="p-3 font-bold text-gray-900">GD</td><td class="p-3">Group Discussion</td><td class="p-3 text-xs">Influence, Expression, Cooperation, Adaptability</td><td class="p-3">Initiate or summarize; never shout; listen actively</td></tr>
+                                    <tr class="hover:bg-gray-50"><td class="p-3 font-bold text-gray-900">Lecturette</td><td class="p-3">3-min solo talk</td><td class="p-3 text-xs">Power of Expression, Organizing Ability</td><td class="p-3">Intro → 3 points → conclusion; practice daily</td></tr>
+                                    <tr class="hover:bg-gray-50"><td class="p-3 font-bold text-gray-900">PGT</td><td class="p-3">Progressive Group Task</td><td class="p-3 text-xs">Organizing, Stamina, Initiative, Cooperation</td><td class="p-3">Suggest plan; get everyone involved; physically active</td></tr>
+                                    <tr class="hover:bg-gray-50"><td class="p-3 font-bold text-gray-900">HGT</td><td class="p-3">Half Group Task</td><td class="p-3 text-xs">Influence, Leadership, Speed of Decision</td><td class="p-3">Smaller group — your voice matters more here</td></tr>
+                                    <tr class="hover:bg-gray-50"><td class="p-3 font-bold text-gray-900">Command Task</td><td class="p-3">Lead 2 subordinates to solve obstacle</td><td class="p-3 text-xs">All OLQs — most critical test</td><td class="p-3">Plan confidently; give clear instructions; stay calm</td></tr>
+                                    <tr class="hover:bg-gray-50"><td class="p-3 font-bold text-gray-900">FGT</td><td class="p-3">Final Group Task</td><td class="p-3 text-xs">Stamina, Determination, Cooperation</td><td class="p-3">Last test — assessors check consistency; give full energy</td></tr>
+                                    <tr class="hover:bg-gray-50"><td class="p-3 font-bold text-gray-900">Personal Interview</td><td class="p-3">IO/Psychologist interview</td><td class="p-3 text-xs">All 15 OLQs holistically</td><td class="p-3">Know yourself deeply; be honest; no contradictions with SD</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <div class="bg-khaki-50 border-l-4 border-khaki-500 rounded-r-lg p-4 text-sm text-gray-700">
+                            <strong class="text-khaki-900">Golden Rule:</strong> Assessors look for consistency across all 5 days and all tests. A good story in TAT must match your behavior in GTO and your answers in the Personal Interview. OLQs cannot be faked — they must be built over months before the SSB.
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <section id="leadership-policy" class="view-section hidden animate-fade-in">
+                <header class="mb-8">
+                    <h1 class="text-3xl font-bold text-gray-900 mb-2">Leadership, Awards & Policies</h1>
+                    <p class="text-gray-600 max-w-3xl">Crucial current affairs topics for your Personal Interview and Group Discussion rounds.</p>
+                </header>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                        <h2 class="text-xl font-bold text-olive-700 mb-4 border-b border-gray-100 pb-2">Military Leadership (Current)</h2>
+                        <ul class="space-y-3 text-sm">
+                            <li class="flex justify-between items-center pb-2 border-b border-gray-50"><span class="text-gray-600">Supreme Commander (President)</span> <strong class="text-gray-900">Droupadi Murmu</strong></li>
+                            <li class="flex justify-between items-center pb-2 border-b border-gray-50"><span class="text-gray-600">Raksha Mantri (Defence Minister)</span> <strong class="text-gray-900">Rajnath Singh</strong></li>
+                            <li class="flex justify-between items-center pb-2 border-b border-gray-50"><span class="text-gray-600">Chief of Defence Staff (CDS)</span> <strong class="text-gray-900">Gen Anil Chauhan</strong></li>
+                            <li class="flex justify-between items-center pb-2 border-b border-gray-50"><span class="text-gray-600">Chief of Army Staff (COAS)</span> <strong class="text-olive-700">Gen Upendra Dwivedi</strong></li>
+                            <li class="flex justify-between items-center pb-2 border-b border-gray-50"><span class="text-gray-600">Chief of Naval Staff (CNS)</span> <strong class="text-cyan-700">Adm Dinesh K Tripathi</strong></li>
+                            <li class="flex justify-between items-center"><span class="text-gray-600">Chief of Air Staff (CAS)</span> <strong class="text-blue-700">ACM Amar Preet Singh</strong></li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                        <h2 class="text-xl font-bold text-steel-700 mb-4 border-b border-gray-100 pb-2">Gallantry Awards</h2>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <h3 class="font-bold text-gray-900 mb-2">Wartime</h3>
+                                <ol class="list-decimal pl-4 text-sm text-gray-700 space-y-1 font-medium">
+                                    <li class="text-olive-800">Param Vir Chakra (PVC)</li>
+                                    <li>Maha Vir Chakra (MVC)</li>
+                                    <li>Vir Chakra (VrC)</li>
+                                </ol>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-gray-900 mb-2">Peacetime</h3>
+                                <ol class="list-decimal pl-4 text-sm text-gray-700 space-y-1 font-medium">
+                                    <li class="text-steel-800">Ashoka Chakra (AC)</li>
+                                    <li>Kirti Chakra (KC)</li>
+                                    <li>Shaurya Chakra (SC)</li>
+                                </ol>
+                            </div>
+                        </div>
+                        <div class="mt-4 p-3 bg-khaki-50 rounded text-xs text-gray-700 border border-khaki-200">
+                            <strong>Note:</strong> Service awards like Yudh Seva Medal (YSM) or Sena Medal (SM) are distinct from Gallantry Awards.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                        <h2 class="text-xl font-bold text-gray-900 mb-4 border-b border-gray-100 pb-2">Critical Defence Policies</h2>
+                        <div class="space-y-4">
+                            <div>
+                                <h3 class="font-bold text-khaki-800 text-sm">1. Agnipath Scheme (Agniveers)</h3>
+                                <p class="text-xs text-gray-600 mt-1">Recruitment of soldiers below commissioned officer rank for a 4-year tenure. Goal is a younger demographic profile and reduced pension bills. After 4 years, up to 25% are retained in regular cadre; the rest exit with a 'Seva Nidhi' package.</p>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-khaki-800 text-sm">2. Nuclear Doctrine</h3>
+                                <p class="text-xs text-gray-600 mt-1">Based on "No First Use" (NFU) and "Credible Minimum Deterrence". Nuclear weapons can only be authorized by the civilian political leadership through the Nuclear Command Authority (NCA).</p>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-khaki-800 text-sm">3. Make in India (Atmanirbharta)</h3>
+                                <p class="text-xs text-gray-600 mt-1">Focus on self-reliance in defence. Key initiatives: iDEX (Innovations for Defence Excellence), two Defence Industrial Corridors (UP & Tamil Nadu), and negative import lists.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                        <h2 class="text-xl font-bold text-gray-900 mb-4 border-b border-gray-100 pb-2">Special Forces & Academies</h2>
+                        <div class="space-y-4">
+                            <div>
+                                <h3 class="font-bold text-sm text-gray-800">Special Forces</h3>
+                                <ul class="text-xs text-gray-600 mt-1 space-y-1">
+                                    <li>• <strong>PARA SF:</strong> Indian Army (Maroon Berets, Balidan Badge).</li>
+                                    <li>• <strong>MARCOS:</strong> Indian Navy (Marine Commandos, Magarmach).</li>
+                                    <li>• <strong>Garud Commando Force:</strong> Indian Air Force.</li>
+                                    <li>• <strong>NSG (National Security Guard):</strong> MHA (Black Cats, Counter-Terrorism).</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-sm text-gray-800">Major Academies</h3>
+                                <ul class="text-xs text-gray-600 mt-1 space-y-1">
+                                    <li>• <strong>NDA (National Defence Academy):</strong> Khadakwasla, Pune (Tri-Service).</li>
+                                    <li>• <strong>IMA (Indian Military Academy):</strong> Dehradun, Uttarakhand (Army).</li>
+                                    <li>• <strong>OTA (Officers Training Academy):</strong> Chennai, TN & Gaya, Bihar (Short Service).</li>
+                                    <li>• <strong>AFA (Air Force Academy):</strong> Dundigal, Hyderabad.</li>
+                                    <li>• <strong>INA (Indian Naval Academy):</strong> Ezhimala, Kerala.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="defence-tech" class="view-section hidden animate-fade-in">
+                <header class="mb-8">
+                    <h1 class="text-3xl font-bold text-gray-900 mb-2">CAPF & Defence Technology</h1>
+                    <p class="text-gray-600 max-w-3xl">Understanding the difference between Armed Forces and Paramilitary, and knowing the PSUs that build India's arsenal.</p>
+                </header>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                        <h2 class="text-xl font-bold text-olive-700 mb-4 border-b border-gray-100 pb-2">Central Armed Police Forces (CAPF)</h2>
+                        <p class="text-sm text-gray-600 mb-4">Under the Ministry of Home Affairs (MHA), not MoD.</p>
+                        <ul class="space-y-3 text-sm">
+                            <li><strong>Border Security Force (BSF):</strong> Guards Indo-Pak & Indo-Bangladesh borders.</li>
+                            <li><strong>CRPF:</strong> Largest force; handles internal security, riots, and Naxal operations.</li>
+                            <li><strong>ITBP:</strong> Guards the high-altitude Indo-China border.</li>
+                            <li><strong>Sashastra Seema Bal (SSB):</strong> Guards Indo-Nepal & Indo-Bhutan borders.</li>
+                            <li><strong>CISF:</strong> Secures vital installations (airports, nuclear plants, metro).</li>
+                            <li><strong>Assam Rifles:</strong> Oldest paramilitary; guards Indo-Myanmar border.</li>
+                        </ul>
+                    </div>
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                        <h2 class="text-xl font-bold text-steel-700 mb-4 border-b border-gray-100 pb-2">Key Defence Organizations</h2>
+                        <ul class="space-y-3 text-sm">
+                            <li><strong>DRDO:</strong> R&D agency. Developers of Agni, Prithvi, Akash, Nag missiles, and Tejas LCA.</li>
+                            <li><strong>HAL (Hindustan Aeronautics Ltd):</strong> Manufactures Tejas, ALH Dhruv, LCH Prachand, Sukhoi-30MKI.</li>
+                            <li><strong>BEL (Bharat Electronics Ltd):</strong> Electronics, radars, electronic warfare systems.</li>
+                            <li><strong>BDL (Bharat Dynamics Ltd):</strong> Manufactures missiles and underwater weapons.</li>
+                            <li><strong>Ordnance Factory Board (Now 7 PSUs):</strong> Manufactures arms, ammunition, and artillery.</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <section id="flashcards" class="view-section hidden animate-fade-in">
+                <header class="mb-8 text-center">
+                    <h1 class="text-3xl font-bold text-gray-900 mb-2">Active Recall Flashcards</h1>
+                    <p class="text-gray-600 max-w-2xl mx-auto">Click on a card to reveal the answer. Expanded to include SSB process, OLQs, and policy.</p>
+                </header>
+
+                <div class="flex justify-center mb-8 gap-2 flex-wrap">
+                    <button onclick="filterCards('all')" class="cat-btn px-4 py-2 bg-olive-700 text-white text-sm rounded-full font-medium transition-colors">All Cards</button>
+                    <button onclick="filterCards('ssb')" class="cat-btn px-4 py-2 bg-white border border-gray-300 text-gray-700 text-sm rounded-full font-medium transition-colors">SSB & OLQs</button>
+                    <button onclick="filterCards('policy')" class="cat-btn px-4 py-2 bg-white border border-gray-300 text-gray-700 text-sm rounded-full font-medium transition-colors">Awards & Policy</button>
+                    <button onclick="filterCards('org')" class="cat-btn px-4 py-2 bg-white border border-gray-300 text-gray-700 text-sm rounded-full font-medium transition-colors">Organization</button>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" id="flashcard-container">
+                    </div>
+            </section>
+
+        </div>
+    </main>
+
+    <script>
+        function navigate(viewId) {
+            document.querySelectorAll('.view-section').forEach(el => {
+                el.classList.add('hidden'); el.classList.remove('block');
+            });
+            const target = document.getElementById(viewId);
+            if (target) { target.classList.remove('hidden'); target.classList.add('block'); }
+
+            document.querySelectorAll('#sidebar-nav .nav-item').forEach(el => {
+                el.classList.remove('active', 'bg-f4f7f0', 'border-olive-700', 'border-r-4', 'font-semibold', 'text-olive-700');
+                el.classList.add('text-gray-600');
+            });
+            
+            const activeBtn = Array.from(document.querySelectorAll('#sidebar-nav .nav-item')).find(btn => btn.getAttribute('onclick').includes(viewId));
+            if(activeBtn) {
+                activeBtn.classList.add('active', 'bg-f4f7f0', 'border-olive-700', 'border-r-4', 'font-semibold', 'text-olive-700');
+                activeBtn.classList.remove('text-gray-600');
+            }
+
+            if(viewId === 'formations' && !window.chartInitialized) {
+                initChart(); window.chartInitialized = true;
+            }
+        }
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active', 'bg-white', 'shadow-sm', 'text-olive-700', 'border', 'border-gray-200');
+                btn.classList.add('text-gray-600', 'hover:bg-gray-100');
+            });
+            event.currentTarget.classList.remove('text-gray-600', 'hover:bg-gray-100');
+            event.currentTarget.classList.add('active', 'bg-white', 'shadow-sm', 'text-olive-700', 'border', 'border-gray-200');
+
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.add('hidden'); content.classList.remove('block');
+            });
+            document.getElementById('tab-' + tabId).classList.remove('hidden');
+            document.getElementById('tab-' + tabId).classList.add('block');
+        }
+
+        function initChart() {
+            const ctx = document.getElementById('formationsChart').getContext('2d');
+            const data = {
+                labels: ['Section', 'Platoon', 'Company', 'Battalion', 'Brigade', 'Division'],
+                datasets: [{
+                    label: 'Approx. Troop Strength',
+                    data: [10, 30, 120, 800, 3000, 15000],
+                    backgroundColor: ['rgba(148, 163, 184, 0.6)', 'rgba(148, 163, 184, 0.8)', 'rgba(70, 130, 180, 0.6)', 'rgba(70, 130, 180, 0.8)', 'rgba(92, 122, 54, 0.6)', 'rgba(92, 122, 54, 0.9)'],
+                    borderColor: ['#94a3b8', '#94a3b8', '#4682b4', '#4682b4', '#5c7a36', '#3B5323'],
+                    borderWidth: 1, borderRadius: 4
+                }]
+            };
+            new Chart(ctx, {
+                type: 'bar', data: data,
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    scales: { y: { type: 'logarithmic', title: { display: true, text: 'Personnel (Log Scale)' } } },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+
+        const flashcardData = [
+            { q: "What tests happen on Day 1 (Screening) of SSB?", a: "OIR (Officer Intelligence Rating) and PPDT (Picture Perception & Description Test).", cat: "ssb" },
+            { q: "Name the 4 Psychological Tests.", a: "TAT (Thematic Apperception), WAT (Word Association), SRT (Situation Reaction), SDT (Self Description).", cat: "ssb" },
+            { q: "How many Officer Like Qualities (OLQs) are assessed?", a: "15 OLQs divided into 4 Factors.", cat: "ssb" },
+            { q: "What is India's highest Wartime Gallantry Award?", a: "Param Vir Chakra (PVC).", cat: "policy" },
+            { q: "What is India's highest Peacetime Gallantry Award?", a: "Ashoka Chakra (AC).", cat: "policy" },
+            { q: "What is the motto of the Indian Army?", a: "Sewa Paramo Dharma (Service Before Self).", cat: "org" },
+            { q: "What is the core feature of the Agnipath Scheme?", a: "4-year tenure for soldiers (Agniveers) with 25% retention into regular cadre.", cat: "policy" },
+            { q: "What is India's Nuclear Doctrine?", a: "No First Use (NFU) and Credible Minimum Deterrence.", cat: "policy" },
+            { q: "Name the Special Forces of the Indian Navy.", a: "MARCOS (Marine Commandos).", cat: "org" },
+            { q: "What is the equivalent IAF rank to an Army Colonel?", a: "Group Captain", cat: "org" },
+            { q: "Where is the National Defence Academy (NDA) located?", a: "Khadakwasla, Pune.", cat: "org" },
+            { q: "What is the motto/role of the Corps of Engineers?", a: "'Sarvatra' (Everywhere). Roles: Mobility, Counter-Mobility, Survivability.", cat: "org" },
+            { q: "What does PPDT stand for?", a: "Picture Perception and Description Test.", cat: "ssb" },
+            { q: "Name three Paramilitary/CAPF forces.", a: "CRPF, BSF, ITBP, CISF, SSB, Assam Rifles.", cat: "org" }
+        ];
+
+        function renderCards(category = 'all') {
+            const container = document.getElementById('flashcard-container');
+            container.innerHTML = '';
+            const filteredData = category === 'all' ? flashcardData : flashcardData.filter(c => c.cat === category);
+
+            filteredData.forEach(card => {
+                const cardHTML = `
+                    <div class="h-48 perspective-1000 cursor-pointer w-full" onclick="this.classList.toggle('flipped')">
+                        <div class="relative w-full h-full transform-style-3d flip-card-inner rounded-xl shadow-sm hover:shadow-md">
+                            <div class="absolute w-full h-full backface-hidden bg-white border border-gray-200 rounded-xl p-6 flex flex-col justify-center items-center text-center">
+                                <span class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Question</span>
+                                <h3 class="text-gray-800 font-medium">${card.q}</h3>
+                                <div class="absolute bottom-3 text-xs text-khaki-700 animate-pulse">Click to flip</div>
+                            </div>
+                            <div class="absolute w-full h-full backface-hidden bg-olive-700 border border-olive-900 rounded-xl p-6 flex flex-col justify-center items-center text-center rotate-y-180">
+                                <span class="text-xs font-bold text-olive-100 uppercase tracking-wider mb-2">Answer</span>
+                                <p class="text-white font-medium text-sm">${card.a}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += cardHTML;
+            });
+        }
+
+        function switchOlqTab(tabId) {
+            // Update Tab Button Styles
+            document.querySelectorAll('.olq-tab-btn').forEach(btn => {
+                btn.classList.remove('active', 'bg-white', 'shadow-sm', 'text-olive-700', 'border', 'border-gray-200');
+                btn.classList.add('text-gray-600', 'hover:bg-gray-100');
+            });
+            event.currentTarget.classList.remove('text-gray-600', 'hover:bg-gray-100');
+            event.currentTarget.classList.add('active', 'bg-white', 'shadow-sm', 'text-olive-700', 'border', 'border-gray-200');
+
+            // Hide all OLQ contents and show target
+            document.querySelectorAll('.olq-tab-content').forEach(content => {
+                content.classList.add('hidden'); 
+                content.classList.remove('block');
+            });
+            document.getElementById('olq-tab-' + tabId).classList.remove('hidden');
+            document.getElementById('olq-tab-' + tabId).classList.add('block');
+        }
+
+        function filterTable(tableId, query) {
+            query = query.toLowerCase();
+            document.querySelectorAll('#' + tableId + ' tbody tr').forEach(row => {
+                row.style.display = row.textContent.toLowerCase().includes(query) ? '' : 'none';
+            });
+        }
+
+        function filterCards(cat) {
+            renderCards(cat);
+            document.querySelectorAll('.cat-btn').forEach(b => {
+                b.classList.remove('bg-olive-700', 'text-white');
+                b.classList.add('bg-white', 'text-gray-700');
+            });
+            event.target.classList.add('bg-olive-700', 'text-white');
+            event.target.classList.remove('bg-white', 'text-gray-700');
+        }
+
+        document.addEventListener('DOMContentLoaded', () => renderCards());
+    </script>
+</body>
+</html>
