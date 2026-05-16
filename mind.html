@@ -1,0 +1,1738 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MINDFORGE — Core Human Skills</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:wght@400;700&family=Barlow+Condensed:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a08;
+    --surface: #111110;
+    --border: #2a2a25;
+    --accent: #c8a84b;
+    --accent2: #4b8fc8;
+    --red: #c84b4b;
+    --green: #4bc87a;
+    --text: #d4d0c8;
+    --muted: #6b6860;
+    --white: #f0ede4;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Barlow Condensed', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* GRAIN OVERLAY */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.4;
+  }
+
+  /* HEADER */
+  header {
+    border-bottom: 1px solid var(--border);
+    padding: 2rem 2rem 1.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  header::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0;
+    width: 40%;
+    height: 2px;
+    background: var(--accent);
+  }
+
+  .header-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(3rem, 8vw, 5.5rem);
+    color: var(--white);
+    letter-spacing: 0.05em;
+    line-height: 1;
+  }
+
+  .logo span { color: var(--accent); }
+
+  .tagline {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--muted);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-top: 0.4rem;
+  }
+
+  .doctrine {
+    margin-top: 1.2rem;
+    font-size: 1rem;
+    color: var(--muted);
+    font-weight: 300;
+    max-width: 600px;
+    line-height: 1.5;
+    border-left: 2px solid var(--accent);
+    padding-left: 1rem;
+  }
+
+  /* NAV TABS */
+  .nav-tabs {
+    display: flex;
+    gap: 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+  }
+
+  .nav-tabs::-webkit-scrollbar { display: none; }
+
+  .tab-btn {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 1rem 1.5rem;
+    border: none;
+    background: none;
+    color: var(--muted);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .tab-btn:hover { color: var(--text); }
+
+  .tab-btn.active {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+    background: rgba(200,168,75,0.04);
+  }
+
+  /* MAIN LAYOUT */
+  .main {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 2rem;
+  }
+
+  /* SECTION */
+  .section { display: none; }
+  .section.active { display: block; }
+
+  /* SKILL CARD */
+  .skill-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+  }
+
+  .skill-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+
+  .skill-card:hover {
+    border-color: var(--accent);
+    transform: translateY(-2px);
+  }
+
+  .skill-card.expanded { border-color: var(--accent); }
+
+  .card-accent-bar {
+    height: 3px;
+    width: 100%;
+  }
+
+  .cat-time .card-accent-bar { background: var(--accent); }
+  .cat-body .card-accent-bar { background: var(--accent2); }
+  .cat-mind .card-accent-bar { background: var(--green); }
+  .cat-practical .card-accent-bar { background: var(--red); }
+
+  .card-header {
+    padding: 1.2rem 1.2rem 0.8rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .skill-icon {
+    font-size: 1.6rem;
+    line-height: 1;
+    flex-shrink: 0;
+  }
+
+  .skill-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.6rem;
+    color: var(--white);
+    letter-spacing: 0.03em;
+    line-height: 1.1;
+  }
+
+  .skill-subtitle {
+    font-size: 0.8rem;
+    color: var(--muted);
+    font-weight: 300;
+    margin-top: 0.2rem;
+    letter-spacing: 0.05em;
+  }
+
+  .skill-tags {
+    display: flex;
+    gap: 0.4rem;
+    flex-wrap: wrap;
+    padding: 0 1.2rem 1rem;
+  }
+
+  .tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.55rem;
+    letter-spacing: 0.1em;
+    padding: 0.2rem 0.5rem;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+
+  .tag.highlight {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .card-body {
+    display: none;
+    border-top: 1px solid var(--border);
+    padding: 1.2rem;
+    animation: fadeIn 0.2s ease;
+  }
+
+  .skill-card.expanded .card-body { display: block; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-4px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .method-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 0.8rem;
+  }
+
+  .method-steps {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .method-steps li {
+    display: flex;
+    gap: 0.8rem;
+    align-items: flex-start;
+    font-size: 0.95rem;
+    font-weight: 300;
+    line-height: 1.4;
+  }
+
+  .step-num {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--accent);
+    background: rgba(200,168,75,0.1);
+    border: 1px solid rgba(200,168,75,0.3);
+    padding: 0.1rem 0.4rem;
+    flex-shrink: 0;
+    margin-top: 0.15rem;
+  }
+
+  .cat-body .step-num {
+    color: var(--accent2);
+    background: rgba(75,143,200,0.1);
+    border-color: rgba(75,143,200,0.3);
+  }
+
+  .cat-mind .step-num {
+    color: var(--green);
+    background: rgba(75,200,122,0.1);
+    border-color: rgba(75,200,122,0.3);
+  }
+
+  .cat-practical .step-num {
+    color: var(--red);
+    background: rgba(200,75,75,0.1);
+    border-color: rgba(200,75,75,0.3);
+  }
+
+  .timeline-bar {
+    margin-top: 1rem;
+    padding-top: 0.8rem;
+    border-top: 1px solid var(--border);
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .timeline-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .week-pip {
+    width: 28px;
+    height: 6px;
+    background: var(--border);
+    position: relative;
+  }
+
+  .week-pip.filled { background: var(--accent); }
+  .cat-body .week-pip.filled { background: var(--accent2); }
+  .cat-mind .week-pip.filled { background: var(--green); }
+  .cat-practical .week-pip.filled { background: var(--red); }
+
+  .week-pip-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.55rem;
+    color: var(--muted);
+  }
+
+  /* DRILL SECTION */
+  .drill-panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 2rem;
+    margin-top: 1.5rem;
+  }
+
+  .drill-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2rem;
+    color: var(--white);
+    letter-spacing: 0.05em;
+    margin-bottom: 0.3rem;
+  }
+
+  .drill-desc {
+    font-size: 0.9rem;
+    color: var(--muted);
+    font-weight: 300;
+    margin-bottom: 2rem;
+  }
+
+  /* TIMER DRILL */
+  .timer-display {
+    font-family: 'Space Mono', monospace;
+    font-size: clamp(3rem, 10vw, 6rem);
+    color: var(--white);
+    text-align: center;
+    letter-spacing: 0.05em;
+    line-height: 1;
+    padding: 2rem;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    margin-bottom: 1.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .timer-display::before {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0;
+    height: 3px;
+    background: var(--accent);
+    transition: width 0.1s linear;
+    width: var(--progress, 0%);
+  }
+
+  .timer-target-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    color: var(--muted);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    text-align: center;
+    margin-bottom: 0.5rem;
+  }
+
+  .timer-buttons {
+    display: flex;
+    gap: 0.8rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+  }
+
+  .btn {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 0.8rem 1.5rem;
+    border: 1px solid var(--border);
+    background: none;
+    color: var(--text);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .btn:hover { border-color: var(--accent); color: var(--accent); }
+
+  .btn.primary {
+    background: var(--accent);
+    color: var(--bg);
+    border-color: var(--accent);
+    font-weight: 700;
+  }
+
+  .btn.primary:hover { background: #e0bc5a; }
+
+  .btn.danger {
+    background: var(--red);
+    color: var(--white);
+    border-color: var(--red);
+  }
+
+  .btn.success {
+    background: var(--green);
+    color: var(--bg);
+    border-color: var(--green);
+    font-weight: 700;
+  }
+
+  .target-select {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  .target-btn {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    padding: 0.5rem 1rem;
+    border: 1px solid var(--border);
+    background: none;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .target-btn.active {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: rgba(200,168,75,0.08);
+  }
+
+  .result-box {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    padding: 1.2rem;
+    text-align: center;
+    display: none;
+    animation: fadeIn 0.3s ease;
+  }
+
+  .result-box.show { display: block; }
+
+  .result-score {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 3rem;
+    line-height: 1;
+    margin-bottom: 0.3rem;
+  }
+
+  .result-score.great { color: var(--green); }
+  .result-score.ok { color: var(--accent); }
+  .result-score.miss { color: var(--red); }
+
+  .result-detail {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+  }
+
+  .history-log {
+    margin-top: 1.5rem;
+    border-top: 1px solid var(--border);
+    padding-top: 1rem;
+  }
+
+  .history-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    color: var(--muted);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 0.8rem;
+  }
+
+  .history-entries {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    max-height: 150px;
+    overflow-y: auto;
+  }
+
+  .history-entry {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    padding: 0.4rem 0.6rem;
+    background: var(--bg);
+    border: 1px solid var(--border);
+  }
+
+  .entry-diff.great { color: var(--green); }
+  .entry-diff.ok { color: var(--accent); }
+  .entry-diff.miss { color: var(--red); }
+
+  /* BREATHING DRILL */
+  .breath-circle-wrap {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem 0;
+  }
+
+  .breath-circle {
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    border: 2px solid var(--accent2);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    transition: transform 0.1s;
+    background: radial-gradient(circle at center, rgba(75,143,200,0.05), transparent);
+  }
+
+  .breath-circle.inhale {
+    animation: expand 4s ease-in forwards;
+    border-color: var(--accent2);
+  }
+
+  .breath-circle.hold {
+    border-color: var(--accent);
+  }
+
+  .breath-circle.exhale {
+    animation: contract 4s ease-out forwards;
+    border-color: var(--green);
+  }
+
+  @keyframes expand {
+    from { transform: scale(1); }
+    to { transform: scale(1.35); }
+  }
+
+  @keyframes contract {
+    from { transform: scale(1.35); }
+    to { transform: scale(1); }
+  }
+
+  .breath-label {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.8rem;
+    color: var(--white);
+    letter-spacing: 0.05em;
+  }
+
+  .breath-count {
+    font-family: 'Space Mono', monospace;
+    font-size: 1.5rem;
+    color: var(--muted);
+  }
+
+  .breath-phase-desc {
+    text-align: center;
+    font-size: 0.85rem;
+    color: var(--muted);
+    font-weight: 300;
+    margin-bottom: 1rem;
+  }
+
+  /* REACTION DRILL */
+  .reaction-zone {
+    min-height: 160px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    cursor: pointer;
+    margin-bottom: 1.5rem;
+    position: relative;
+    overflow: hidden;
+    transition: background 0.1s;
+    user-select: none;
+  }
+
+  .reaction-zone.waiting { border-color: var(--muted); }
+  .reaction-zone.ready { background: rgba(200,75,75,0.15); border-color: var(--red); }
+  .reaction-zone.go { background: rgba(75,200,122,0.15); border-color: var(--green); }
+
+  .reaction-text {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.5rem;
+    letter-spacing: 0.05em;
+    color: var(--muted);
+    text-align: center;
+    line-height: 1.2;
+  }
+
+  .reaction-zone.ready .reaction-text { color: var(--red); }
+  .reaction-zone.go .reaction-text { color: var(--green); }
+
+  /* ROOM READING */
+  .scenario-box {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    font-weight: 300;
+    min-height: 100px;
+    display: flex;
+    align-items: center;
+  }
+
+  .answer-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .answer-btn {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.9rem;
+    padding: 0.8rem;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.15s;
+    line-height: 1.3;
+  }
+
+  .answer-btn:hover { border-color: var(--accent); }
+  .answer-btn.correct { border-color: var(--green); background: rgba(75,200,122,0.1); color: var(--green); }
+  .answer-btn.wrong { border-color: var(--red); background: rgba(200,75,75,0.1); color: var(--red); }
+
+  /* PROGRESS */
+  .progress-section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 2rem;
+    margin-top: 1.5rem;
+  }
+
+  .progress-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+
+  .progress-stat {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    padding: 1rem;
+  }
+
+  .stat-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    color: var(--muted);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 0.4rem;
+  }
+
+  .stat-value {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2rem;
+    color: var(--white);
+    line-height: 1;
+  }
+
+  .stat-value span {
+    font-size: 0.9rem;
+    color: var(--muted);
+    font-family: 'Space Mono', monospace;
+  }
+
+  /* SECTION HEADER */
+  .section-header {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2rem;
+    color: var(--white);
+    letter-spacing: 0.05em;
+  }
+
+  .section-count {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+  }
+
+  .section-intro {
+    font-size: 0.9rem;
+    color: var(--muted);
+    font-weight: 300;
+    max-width: 600px;
+    line-height: 1.5;
+    border-left: 2px solid var(--border);
+    padding-left: 0.8rem;
+  }
+
+  /* SCROLL */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border); }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 1.5rem 2rem;
+    margin-top: 4rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: gap;
+  }
+
+  .footer-text {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .footer-motto {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1rem;
+    color: var(--border);
+    letter-spacing: 0.1em;
+  }
+
+  @media (max-width: 600px) {
+    .main { padding: 1rem; }
+    header { padding: 1.5rem 1rem 1rem; }
+    .answer-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="logo">MIND<span>FORGE</span></div>
+    <div class="tagline">// Core Human Skills — Train. Calibrate. Automate.</div>
+    <p class="doctrine">Simple. Reliable. Effective. Like an AK-47 — no extra parts, works in any condition. These skills are small in cost, massive in impact.</p>
+  </div>
+</header>
+
+<nav class="nav-tabs">
+  <button class="tab-btn active" onclick="showTab('library')">📚 Skill Library</button>
+  <button class="tab-btn" onclick="showTab('time-drill')">⏱ Time Drill</button>
+  <button class="tab-btn" onclick="showTab('breath-drill')">🫁 Breath Drill</button>
+  <button class="tab-btn" onclick="showTab('reaction-drill')">⚡ Reaction Drill</button>
+  <button class="tab-btn" onclick="showTab('room-drill')">👁 Room Reading</button>
+  <button class="tab-btn" onclick="showTab('progress')">📊 Progress</button>
+</nav>
+
+<main class="main">
+
+  <!-- ========== LIBRARY ========== -->
+  <section id="library" class="section active">
+    <div class="section-header">
+      <div class="section-title">Skill Library</div>
+      <div class="section-count">10 CORE SKILLS</div>
+    </div>
+    <p class="section-intro">Click any card to expand the training method. No fluff — just the drill that works.</p>
+
+    <div class="skill-grid">
+
+      <!-- TIME -->
+      <div class="skill-card cat-time" onclick="toggleCard(this)">
+        <div class="card-accent-bar"></div>
+        <div class="card-header">
+          <div class="skill-icon">⏱</div>
+          <div>
+            <div class="skill-title">Time Estimation</div>
+            <div class="skill-subtitle">Internal clock calibration</div>
+          </div>
+        </div>
+        <div class="skill-tags">
+          <span class="tag highlight">AK-47 method</span>
+          <span class="tag">military</span>
+          <span class="tag">games</span>
+          <span class="tag">2–3 weeks</span>
+        </div>
+        <div class="card-body">
+          <div class="method-label">// Training Protocol</div>
+          <ul class="method-steps">
+            <li><span class="step-num">01</span>Pick one duration target — start with 30 seconds only.</li>
+            <li><span class="step-num">02</span>Close eyes or look away. Guess when the time has passed. No counting.</li>
+            <li><span class="step-num">03</span>Check phone. Note the gap. That's your calibration error.</li>
+            <li><span class="step-num">04</span>Repeat 5–10x daily. Brain self-corrects automatically.</li>
+            <li><span class="step-num">05</span>Once 30s is locked, add 1 minute. Then 2 minutes. Never skip steps.</li>
+          </ul>
+          <div class="timeline-bar">
+            <span class="timeline-label">LOCK TIME</span>
+            <div class="week-pip filled" title="W1"></div>
+            <div class="week-pip filled" title="W2"></div>
+            <div class="week-pip" title="W3"></div>
+            <div class="week-pip" title="W4"></div>
+            <span class="week-pip-label">30s locked by W2</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="skill-card cat-time" onclick="toggleCard(this)">
+        <div class="card-accent-bar"></div>
+        <div class="card-header">
+          <div class="skill-icon">🥁</div>
+          <div>
+            <div class="skill-title">Beat / Rhythm Sense</div>
+            <div class="skill-subtitle">Subconscious tempo internalization</div>
+          </div>
+        </div>
+        <div class="skill-tags">
+          <span class="tag highlight">3-stage method</span>
+          <span class="tag">SSB</span>
+          <span class="tag">games</span>
+          <span class="tag">3–4 weeks</span>
+        </div>
+        <div class="card-body">
+          <div class="method-label">// Training Protocol</div>
+          <ul class="method-steps">
+            <li><span class="step-num">S1</span><b>Tap only (W1–2):</b> Set metronome 60 BPM. Tap foot or finger only. No counting. Let body absorb interval.</li>
+            <li><span class="step-num">S2</span><b>Tap + mental pulse (W2–3):</b> Tap AND internally feel each beat. Still no counting.</li>
+            <li><span class="step-num">S3</span><b>Silence drill (W3+):</b> Run metronome 1 min → mute → keep going mentally → restart and check drift. Goal: within 1–2 beats.</li>
+          </ul>
+          <div class="timeline-bar">
+            <span class="timeline-label">LOCK TIME</span>
+            <div class="week-pip filled"></div>
+            <div class="week-pip filled"></div>
+            <div class="week-pip filled"></div>
+            <div class="week-pip"></div>
+            <span class="week-pip-label">Auto by W3</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- BODY -->
+      <div class="skill-card cat-body" onclick="toggleCard(this)">
+        <div class="card-accent-bar"></div>
+        <div class="card-header">
+          <div class="skill-icon">🫁</div>
+          <div>
+            <div class="skill-title">Diaphragm Breathing</div>
+            <div class="skill-subtitle">Nervous system override under pressure</div>
+          </div>
+        </div>
+        <div class="skill-tags">
+          <span class="tag highlight">box breathing</span>
+          <span class="tag">military</span>
+          <span class="tag">snipers</span>
+          <span class="tag">1 week</span>
+        </div>
+        <div class="card-body">
+          <div class="method-label">// Training Protocol</div>
+          <ul class="method-steps">
+            <li><span class="step-num">01</span>Inhale through nose — 4 seconds. Belly expands, not chest.</li>
+            <li><span class="step-num">02</span>Hold — 4 seconds. Completely still.</li>
+            <li><span class="step-num">03</span>Exhale through mouth — 4 seconds. All air out.</li>
+            <li><span class="step-num">04</span>Hold empty — 4 seconds. Then repeat.</li>
+            <li><span class="step-num">05</span>Do 4 cycles. Works in under 2 minutes. Use before high-pressure moments.</li>
+          </ul>
+          <div class="timeline-bar">
+            <span class="timeline-label">LOCK TIME</span>
+            <div class="week-pip filled"></div>
+            <div class="week-pip"></div>
+            <div class="week-pip"></div>
+            <div class="week-pip"></div>
+            <span class="week-pip-label">Works Day 1</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="skill-card cat-body" onclick="toggleCard(this)">
+        <div class="card-accent-bar"></div>
+        <div class="card-header">
+          <div class="skill-icon">🧎</div>
+          <div>
+            <div class="skill-title">Posture Under Fatigue</div>
+            <div class="skill-subtitle">Performance baseline when tired</div>
+          </div>
+        </div>
+        <div class="skill-tags">
+          <span class="tag">physical</span>
+          <span class="tag">military</span>
+          <span class="tag">endurance</span>
+          <span class="tag">2 weeks</span>
+        </div>
+        <div class="card-body">
+          <div class="method-label">// Training Protocol</div>
+          <ul class="method-steps">
+            <li><span class="step-num">01</span>Stand against a wall: heels, glutes, shoulders, head all touching. That's the baseline.</li>
+            <li><span class="step-num">02</span>Walk away. Hold that shape for 30 seconds. Then check — how much did it collapse?</li>
+            <li><span class="step-num">03</span>Set 1-hour reminders during the day. At each: reset posture consciously.</li>
+            <li><span class="step-num">04</span>Do wall drill after exercise when tired — that's when posture collapses most.</li>
+            <li><span class="step-num">05</span>Goal: hold wall posture for 5 min walking without reminder.</li>
+          </ul>
+          <div class="timeline-bar">
+            <span class="timeline-label">LOCK TIME</span>
+            <div class="week-pip filled"></div>
+            <div class="week-pip filled"></div>
+            <div class="week-pip"></div>
+            <div class="week-pip"></div>
+            <span class="week-pip-label">Habit by W2</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="skill-card cat-body" onclick="toggleCard(this)">
+        <div class="card-accent-bar"></div>
+        <div class="card-header">
+          <div class="skill-icon">🤸</div>
+          <div>
+            <div class="skill-title">Falling Safely</div>
+            <div class="skill-subtitle">Injury prevention — judo breakfall</div>
+          </div>
+        </div>
+        <div class="skill-tags">
+          <span class="tag highlight">ukemi</span>
+          <span class="tag">survival</span>
+          <span class="tag">military</span>
+          <span class="tag">2 weeks</span>
+        </div>
+        <div class="card-body">
+          <div class="method-label">// Training Protocol</div>
+          <ul class="method-steps">
+            <li><span class="step-num">01</span>On soft surface: sit → tuck chin to chest (prevents head slam).</li>
+            <li><span class="step-num">02</span>Roll backward, slap the ground with both arms at 45°. Arms stay slightly bent — don't lock elbows.</li>
+            <li><span class="step-num">03</span>Practice from sitting 20x. Then from crouching 20x. Then from standing.</li>
+            <li><span class="step-num">04</span>Forward fall: hands out, bent elbows, head turned — NEVER straight arms.</li>
+            <li><span class="step-num">05</span>10 minutes on grass or mat, 3 sessions. Then it's automatic.</li>
+          </ul>
+          <div class="timeline-bar">
+            <span class="timeline-label">LOCK TIME</span>
+            <div class="week-pip filled"></div>
+            <div class="week-pip filled"></div>
+            <div class="week-pip"></div>
+            <div class="week-pip"></div>
+            <span class="week-pip-label">3 sessions</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- MIND -->
+      <div class="skill-card cat-mind" onclick="toggleCard(this)">
+        <div class="card-accent-bar"></div>
+        <div class="card-header">
+          <div class="skill-icon">🧠</div>
+          <div>
+            <div class="skill-title">2-Second Delay</div>
+            <div class="skill-subtitle">Stop the first reaction — own your response</div>
+          </div>
+        </div>
+        <div class="skill-tags">
+          <span class="tag highlight">combat-proven</span>
+          <span class="tag">social</span>
+          <span class="tag">negotiation</span>
+          <span class="tag">1 week</span>
+        </div>
+        <div class="card-body">
+          <div class="method-label">// Training Protocol</div>
+          <ul class="method-steps">
+            <li><span class="step-num">01</span>Any time someone says something that triggers you — pause. Inhale once before responding.</li>
+            <li><span class="step-num">02</span>Use the breath (2 sec) to ask: "Is this my best response or just my first response?"</li>
+            <li><span class="step-num">03</span>Practice in low-stakes situations first: slow replies in texts, pausing before answering questions.</li>
+            <li><span class="step-num">04</span>Increase to high-stakes: arguments, games, urgent decisions.</li>
+            <li><span class="step-num">05</span>After 1 week: the pause becomes your default before action.</li>
+          </ul>
+          <div class="timeline-bar">
+            <span class="timeline-label">LOCK TIME</span>
+            <div class="week-pip filled"></div>
+            <div class="week-pip"></div>
+            <div class="week-pip"></div>
+            <div class="week-pip"></div>
+            <span class="week-pip-label">Default by W1</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="skill-card cat-mind" onclick="toggleCard(this)">
+        <div class="card-accent-bar"></div>
+        <div class="card-header">
+          <div class="skill-icon">🧪</div>
+          <div>
+            <div class="skill-title">State Awareness</div>
+            <div class="skill-subtitle">Know when hunger/tired is making decisions for you</div>
+          </div>
+        </div>
+        <div class="skill-tags">
+          <span class="tag highlight">self-calibration</span>
+          <span class="tag">decision-making</span>
+          <span class="tag">1–2 weeks</span>
+        </div>
+        <div class="card-body">
+          <div class="method-label">// Training Protocol</div>
+          <ul class="method-steps">
+            <li><span class="step-num">01</span>3x daily check-in (morning, afternoon, night): rate hunger 1–5 and energy 1–5. Takes 5 seconds.</li>
+            <li><span class="step-num">02</span>Note any big decisions made near 1-2 on hunger or energy. Review — were they good?</li>
+            <li><span class="step-num">03</span>Create a personal rule: "No major decisions below 3 energy without a pause."</li>
+            <li><span class="step-num">04</span>After 2 weeks: you'll feel the drop automatically before checking numbers.</li>
+          </ul>
+          <div class="timeline-bar">
+            <span class="timeline-label">LOCK TIME</span>
+            <div class="week-pip filled"></div>
+            <div class="week-pip filled"></div>
+            <div class="week-pip"></div>
+            <div class="week-pip"></div>
+            <span class="week-pip-label">Automatic W2</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- PRACTICAL -->
+      <div class="skill-card cat-practical" onclick="toggleCard(this)">
+        <div class="card-accent-bar"></div>
+        <div class="card-header">
+          <div class="skill-icon">👁</div>
+          <div>
+            <div class="skill-title">Room Reading</div>
+            <div class="skill-subtitle">Who's in charge, who's threat, where are exits</div>
+          </div>
+        </div>
+        <div class="skill-tags">
+          <span class="tag highlight">tactical awareness</span>
+          <span class="tag">military</span>
+          <span class="tag">social</span>
+          <span class="tag">2–3 weeks</span>
+        </div>
+        <div class="card-body">
+          <div class="method-label">// Training Protocol</div>
+          <ul class="method-steps">
+            <li><span class="step-num">01</span>Every time you enter a room: before touching your phone — count exits first.</li>
+            <li><span class="step-num">02</span>Identify the loudest person and the quietest person. Who does others look at when they speak?</li>
+            <li><span class="step-num">03</span>Find who is scanning the room (alert) vs locked into conversations (tunnel vision).</li>
+            <li><span class="step-num">04</span>Note body language clusters: crossed arms, feet pointed away = disengaged. Leaning in = invested.</li>
+            <li><span class="step-num">05</span>Daily: write 3 observations from any room. After 3 weeks, it runs in background automatically.</li>
+          </ul>
+          <div class="timeline-bar">
+            <span class="timeline-label">LOCK TIME</span>
+            <div class="week-pip filled"></div>
+            <div class="week-pip filled"></div>
+            <div class="week-pip filled"></div>
+            <div class="week-pip"></div>
+            <span class="week-pip-label">Background W3</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="skill-card cat-practical" onclick="toggleCard(this)">
+        <div class="card-accent-bar"></div>
+        <div class="card-header">
+          <div class="skill-icon">📏</div>
+          <div>
+            <div class="skill-title">Distance by Eye</div>
+            <div class="skill-subtitle">Estimate meters/yards without tools</div>
+          </div>
+        </div>
+        <div class="skill-tags">
+          <span class="tag highlight">dead reckoning</span>
+          <span class="tag">military</span>
+          <span class="tag">navigation</span>
+          <span class="tag">3 weeks</span>
+        </div>
+        <div class="card-body">
+          <div class="method-label">// Training Protocol</div>
+          <ul class="method-steps">
+            <li><span class="step-num">01</span>Know your own pace: walk 100 steps. Measure with phone GPS or map. That's your personal pace count.</li>
+            <li><span class="step-num">02</span>Daily: guess a distance (to a building, car, tree). Then walk it and count steps. Check against guess.</li>
+            <li><span class="step-num">03</span>Learn visual anchors: a standard car is ~4.5m, a door is ~2m, a floor height is ~3m.</li>
+            <li><span class="step-num">04</span>Stack anchors for longer distances: "That's about 5 cars away = 22m."</li>
+            <li><span class="step-num">05</span>After 3 weeks of daily guessing: reliable to within 15% without thinking.</li>
+          </ul>
+          <div class="timeline-bar">
+            <span class="timeline-label">LOCK TIME</span>
+            <div class="week-pip filled"></div>
+            <div class="week-pip filled"></div>
+            <div class="week-pip filled"></div>
+            <div class="week-pip"></div>
+            <span class="week-pip-label">±15% by W3</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="skill-card cat-practical" onclick="toggleCard(this)">
+        <div class="card-accent-bar"></div>
+        <div class="card-header">
+          <div class="skill-icon">💬</div>
+          <div>
+            <div class="skill-title">Precise Speech</div>
+            <div class="skill-subtitle">Say exactly what you mean — no excess</div>
+          </div>
+        </div>
+        <div class="skill-tags">
+          <span class="tag highlight">signal vs noise</span>
+          <span class="tag">military comms</span>
+          <span class="tag">leadership</span>
+          <span class="tag">2 weeks</span>
+        </div>
+        <div class="card-body">
+          <div class="method-label">// Training Protocol</div>
+          <ul class="method-steps">
+            <li><span class="step-num">01</span>After every message you send (text/voice): read it back. Count filler words. "Basically, kind of, sort of, I think, maybe."</li>
+            <li><span class="step-num">02</span>Rewrite removing every filler. Does the meaning change? It shouldn't. If it does, the filler was hiding uncertainty.</li>
+            <li><span class="step-num">03</span>Military rule: State → Reason → Action. "Enemy at north gate — blocking exit — we move east now."</li>
+            <li><span class="step-num">04</span>Practice with a timer: explain any topic in exactly 30 seconds. No more, no less.</li>
+          </ul>
+          <div class="timeline-bar">
+            <span class="timeline-label">LOCK TIME</span>
+            <div class="week-pip filled"></div>
+            <div class="week-pip filled"></div>
+            <div class="week-pip"></div>
+            <div class="week-pip"></div>
+            <span class="week-pip-label">Habit by W2</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ========== TIME DRILL ========== -->
+  <section id="time-drill" class="section">
+    <div class="drill-panel">
+      <div class="drill-title">Time Estimation Drill</div>
+      <div class="drill-desc">Guess-Check method. Choose a target, hit Start, look away, hit Stop when you think the time is up. Brain calibrates automatically.</div>
+
+      <div class="target-select">
+        <button class="target-btn active" onclick="setTarget(15, this)">15 SEC</button>
+        <button class="target-btn" onclick="setTarget(30, this)">30 SEC</button>
+        <button class="target-btn" onclick="setTarget(60, this)">1 MIN</button>
+        <button class="target-btn" onclick="setTarget(120, this)">2 MIN</button>
+      </div>
+
+      <div class="timer-target-label" id="targetLabel">TARGET: 15 SECONDS</div>
+      <div class="timer-display" id="timerDisplay" style="--progress:0%">
+        <span id="timerText">00:00</span>
+      </div>
+
+      <div class="timer-buttons">
+        <button class="btn primary" id="startBtn" onclick="startTimer()">▶ START</button>
+        <button class="btn danger" id="stopBtn" onclick="stopTimer()" style="display:none">⏹ STOP — TIME'S UP</button>
+        <button class="btn" id="resetBtn" onclick="resetTimer()" style="display:none">↺ AGAIN</button>
+      </div>
+
+      <div class="result-box" id="resultBox">
+        <div class="result-score" id="resultScore">+2.4s</div>
+        <div class="result-detail" id="resultDetail">TARGET: 30s | YOUR STOP: 32.4s | ERROR: +2.4s</div>
+      </div>
+
+      <div class="history-log">
+        <div class="history-label">// Calibration Log</div>
+        <div class="history-entries" id="historyEntries">
+          <div style="font-family:'Space Mono',monospace;font-size:0.65rem;color:var(--muted);padding:0.5rem">No entries yet — start drilling.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== BREATH DRILL ========== -->
+  <section id="breath-drill" class="section">
+    <div class="drill-panel">
+      <div class="drill-title">Box Breathing Drill</div>
+      <div class="drill-desc">Used by Navy SEALs, snipers, surgeons. 4 cycles resets your nervous system in under 2 minutes. Works Day 1.</div>
+
+      <div class="breath-phase-desc" id="breathDesc">Press Start to begin. Belly breathing only — chest stays still.</div>
+
+      <div class="breath-circle-wrap">
+        <div class="breath-circle" id="breathCircle">
+          <div class="breath-label" id="breathLabel">READY</div>
+          <div class="breath-count" id="breathCount">4</div>
+        </div>
+      </div>
+
+      <div class="timer-buttons">
+        <button class="btn primary" id="breathStartBtn" onclick="startBreath()">▶ START DRILL</button>
+        <button class="btn" id="breathStopBtn" onclick="stopBreath()" style="display:none">⏹ STOP</button>
+      </div>
+
+      <div style="margin-top:1.5rem;background:var(--bg);border:1px solid var(--border);padding:1rem;">
+        <div class="method-label">// The Four Phases</div>
+        <ul class="method-steps" style="margin-top:0.5rem">
+          <li><span class="step-num" style="color:var(--accent2);background:rgba(75,143,200,0.1);border-color:rgba(75,143,200,0.3)">IN</span>Inhale through nose — 4 sec. Feel belly push out.</li>
+          <li><span class="step-num">HOLD</span>Hold full — 4 sec. Don't tense. Just still.</li>
+          <li><span class="step-num" style="color:var(--green);background:rgba(75,200,122,0.1);border-color:rgba(75,200,122,0.3)">OUT</span>Exhale through mouth — 4 sec. All air out.</li>
+          <li><span class="step-num" style="color:var(--red);background:rgba(200,75,75,0.1);border-color:rgba(200,75,75,0.3)">EMPTY</span>Hold empty — 4 sec. Then repeat.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== REACTION DRILL ========== -->
+  <section id="reaction-drill" class="section">
+    <div class="drill-panel">
+      <div class="drill-title">Reaction + Pause Drill</div>
+      <div class="drill-desc">Two modes. RAW: tap as fast as possible when green. PAUSE: deliberately wait 2 seconds before tapping. Trains both speed and the 2-second delay skill.</div>
+
+      <div class="target-select" style="margin-bottom:1rem">
+        <button class="target-btn active" onclick="setReactionMode('raw', this)">RAW SPEED</button>
+        <button class="target-btn" onclick="setReactionMode('pause', this)">2-SEC PAUSE</button>
+      </div>
+
+      <div class="reaction-zone waiting" id="reactionZone" onclick="reactionTap()">
+        <div class="reaction-text" id="reactionText">TAP TO PRIME</div>
+      </div>
+
+      <div class="result-box" id="reactionResult">
+        <div class="result-score" id="reactionScore">0ms</div>
+        <div class="result-detail" id="reactionDetail"></div>
+      </div>
+
+      <div class="history-log" style="margin-top:1rem">
+        <div class="history-label">// Reaction Log</div>
+        <div class="history-entries" id="reactionHistory">
+          <div style="font-family:'Space Mono',monospace;font-size:0.65rem;color:var(--muted);padding:0.5rem">No entries yet.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== ROOM READING ========== -->
+  <section id="room-drill" class="section">
+    <div class="drill-panel">
+      <div class="drill-title">Room Reading Scenarios</div>
+      <div class="drill-desc">Read the scenario. Pick your read. Train pattern recognition for real-world situations.</div>
+
+      <div class="scenario-box" id="scenarioBox">
+        Press "Next Scenario" to begin.
+      </div>
+      <div class="answer-grid" id="answerGrid"></div>
+      <div class="result-box" id="roomResult" style="margin-bottom:1rem">
+        <div class="result-score" id="roomScore"></div>
+        <div class="result-detail" id="roomDetail"></div>
+      </div>
+      <div class="timer-buttons">
+        <button class="btn primary" onclick="nextScenario()">▶ NEXT SCENARIO</button>
+      </div>
+
+      <div style="margin-top:1.5rem;background:var(--bg);border:1px solid var(--border);padding:1rem">
+        <div class="method-label">// What to Always Scan First</div>
+        <ul class="method-steps" style="margin-top:0.5rem">
+          <li><span class="step-num" style="color:var(--red);background:rgba(200,75,75,0.1);border-color:rgba(200,75,75,0.3)">1</span>Exits — before anything else. Every time.</li>
+          <li><span class="step-num" style="color:var(--red);background:rgba(200,75,75,0.1);border-color:rgba(200,75,75,0.3)">2</span>Who others look at when uncertain — that's the real authority.</li>
+          <li><span class="step-num" style="color:var(--accent)">3</span>Who's scanning the room vs locked into their phone/conversation.</li>
+          <li><span class="step-num" style="color:var(--accent)">4</span>Clusters vs loners — social map of the room.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== PROGRESS ========== -->
+  <section id="progress" class="section">
+    <div class="progress-section">
+      <div class="section-title">Your Progress</div>
+      <p style="font-size:0.85rem;color:var(--muted);margin-top:0.3rem">Stats update as you drill. Keep going — the brain calibrates automatically.</p>
+
+      <div class="progress-grid" id="progressGrid">
+        <!-- filled by JS -->
+      </div>
+    </div>
+
+    <div style="background:var(--surface);border:1px solid var(--border);padding:2rem;margin-top:1.5rem">
+      <div class="section-title" style="font-size:1.5rem;margin-bottom:1rem">Daily Training Order</div>
+      <ul class="method-steps">
+        <li><span class="step-num">AM</span>5× Time drill at your current target. Takes 5 min.</li>
+        <li><span class="step-num">AM</span>1 round box breathing (4 cycles). Takes 2 min.</li>
+        <li><span class="step-num">PM</span>5× Reaction drills — 3 raw, 2 pause mode.</li>
+        <li><span class="step-num">PM</span>3 Room reading scenarios.</li>
+        <li><span class="step-num">ANY</span>Every time you enter a room: exits first, then scan.</li>
+        <li><span class="step-num">ANY</span>Every significant reply: 2-second pause before sending.</li>
+      </ul>
+      <div style="margin-top:1.5rem;padding:1rem;background:var(--bg);border:1px solid var(--accent);border-left-width:3px">
+        <div class="method-label" style="margin-bottom:0.4rem">// AK-47 PRINCIPLE</div>
+        <p style="font-size:0.9rem;color:var(--muted);line-height:1.5;font-weight:300">No exotic methods. No expensive equipment. No motivation required. Just daily repetition of simple drills. The same 10 skills that cost nothing will outperform most people who never bother. Reliability through simplicity.</p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <span class="footer-text">MINDFORGE — No fluff. No hype. Just calibration.</span>
+  <span class="footer-motto">TRAIN SIMPLE. WIN COMPLEX.</span>
+</footer>
+
+<script>
+// ==================== STATE ====================
+const state = {
+  timeDrills: 0,
+  timeErrors: [],
+  breathCycles: 0,
+  reactionTimes: [],
+  roomCorrect: 0,
+  roomTotal: 0,
+};
+
+// ==================== TABS ====================
+function showTab(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.target.classList.add('active');
+  if (id === 'progress') renderProgress();
+}
+
+// ==================== CARD TOGGLE ====================
+function toggleCard(card) {
+  const wasExpanded = card.classList.contains('expanded');
+  document.querySelectorAll('.skill-card.expanded').forEach(c => c.classList.remove('expanded'));
+  if (!wasExpanded) card.classList.add('expanded');
+}
+
+// ==================== TIME DRILL ====================
+let targetSeconds = 15;
+let timerStart = null;
+let timerInterval = null;
+let timerRunning = false;
+
+function setTarget(sec, btn) {
+  targetSeconds = sec;
+  document.querySelectorAll('.target-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const label = sec >= 60 ? (sec/60) + ' MIN' : sec + ' SEC';
+  document.getElementById('targetLabel').textContent = 'TARGET: ' + label;
+  resetTimer();
+}
+
+function startTimer() {
+  timerStart = Date.now();
+  timerRunning = true;
+  document.getElementById('startBtn').style.display = 'none';
+  document.getElementById('stopBtn').style.display = 'inline-block';
+  document.getElementById('resultBox').classList.remove('show');
+
+  timerInterval = setInterval(() => {
+    const elapsed = (Date.now() - timerStart) / 1000;
+    const m = Math.floor(elapsed / 60);
+    const s = Math.floor(elapsed % 60);
+    document.getElementById('timerText').textContent =
+      String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
+    const prog = Math.min((elapsed / targetSeconds) * 100, 100);
+    document.getElementById('timerDisplay').style.setProperty('--progress', prog + '%');
+  }, 50);
+}
+
+function stopTimer() {
+  if (!timerRunning) return;
+  timerRunning = false;
+  clearInterval(timerInterval);
+  const elapsed = (Date.now() - timerStart) / 1000;
+  const error = elapsed - targetSeconds;
+  const absError = Math.abs(error);
+  const sign = error >= 0 ? '+' : '';
+
+  const scoreEl = document.getElementById('resultScore');
+  const detailEl = document.getElementById('resultDetail');
+  const resultBox = document.getElementById('resultBox');
+
+  const grade = absError <= 2 ? 'great' : absError <= 5 ? 'ok' : 'miss';
+  const gradeText = grade === 'great' ? 'LOCKED IN' : grade === 'ok' ? 'CLOSE' : 'DRIFT';
+
+  scoreEl.textContent = gradeText;
+  scoreEl.className = 'result-score ' + grade;
+  detailEl.textContent = `TARGET: ${targetSeconds}s | YOUR STOP: ${elapsed.toFixed(1)}s | ERROR: ${sign}${error.toFixed(1)}s`;
+
+  resultBox.classList.add('show');
+  document.getElementById('stopBtn').style.display = 'none';
+  document.getElementById('resetBtn').style.display = 'inline-block';
+
+  // Log
+  state.timeDrills++;
+  state.timeErrors.push(error);
+  addHistoryEntry(targetSeconds, elapsed, error, grade);
+}
+
+function resetTimer() {
+  clearInterval(timerInterval);
+  timerRunning = false;
+  timerStart = null;
+  document.getElementById('timerText').textContent = '00:00';
+  document.getElementById('timerDisplay').style.setProperty('--progress', '0%');
+  document.getElementById('startBtn').style.display = 'inline-block';
+  document.getElementById('stopBtn').style.display = 'none';
+  document.getElementById('resetBtn').style.display = 'none';
+  document.getElementById('resultBox').classList.remove('show');
+}
+
+function addHistoryEntry(target, actual, error, grade) {
+  const container = document.getElementById('historyEntries');
+  const blank = container.querySelector('div');
+  if (blank) blank.remove();
+
+  const sign = error >= 0 ? '+' : '';
+  const entry = document.createElement('div');
+  entry.className = 'history-entry';
+  entry.innerHTML = `
+    <span style="color:var(--muted)">${target}s target</span>
+    <span style="color:var(--text)">${actual.toFixed(1)}s actual</span>
+    <span class="entry-diff ${grade}">${sign}${error.toFixed(1)}s</span>
+  `;
+  container.insertBefore(entry, container.firstChild);
+}
+
+// ==================== BREATH DRILL ====================
+const breathPhases = [
+  { label: 'INHALE', count: 4, class: 'inhale', desc: 'Breathe in through nose. Belly out.' },
+  { label: 'HOLD', count: 4, class: 'hold', desc: 'Full hold. Stay still. Relax shoulders.' },
+  { label: 'EXHALE', count: 4, class: 'exhale', desc: 'All air out through mouth. Slow.' },
+  { label: 'EMPTY', count: 4, class: '', desc: 'Empty hold. Completely still.' },
+];
+
+let breathPhaseIdx = 0;
+let breathCountVal = 4;
+let breathCycle = 0;
+let breathInterval = null;
+let breathRunning = false;
+
+function startBreath() {
+  breathRunning = true;
+  breathPhaseIdx = 0;
+  breathCycle = 0;
+  breathCountVal = 4;
+  document.getElementById('breathStartBtn').style.display = 'none';
+  document.getElementById('breathStopBtn').style.display = 'inline-block';
+  runBreathPhase();
+}
+
+function runBreathPhase() {
+  if (!breathRunning) return;
+  const phase = breathPhases[breathPhaseIdx];
+  const circle = document.getElementById('breathCircle');
+  circle.className = 'breath-circle ' + phase.class;
+  document.getElementById('breathLabel').textContent = phase.label;
+  document.getElementById('breathDesc').textContent = phase.desc;
+  breathCountVal = phase.count;
+  document.getElementById('breathCount').textContent = breathCountVal;
+
+  breathInterval = setInterval(() => {
+    breathCountVal--;
+    document.getElementById('breathCount').textContent = breathCountVal;
+    if (breathCountVal <= 0) {
+      clearInterval(breathInterval);
+      breathPhaseIdx = (breathPhaseIdx + 1) % 4;
+      if (breathPhaseIdx === 0) {
+        breathCycle++;
+        state.breathCycles++;
+        if (breathCycle >= 4) {
+          stopBreath(true);
+          return;
+        }
+      }
+      setTimeout(runBreathPhase, 300);
+    }
+  }, 1000);
+}
+
+function stopBreath(complete) {
+  breathRunning = false;
+  clearInterval(breathInterval);
+  document.getElementById('breathStartBtn').style.display = 'inline-block';
+  document.getElementById('breathStopBtn').style.display = 'none';
+  const circle = document.getElementById('breathCircle');
+  circle.className = 'breath-circle';
+  document.getElementById('breathLabel').textContent = complete ? 'DONE' : 'READY';
+  document.getElementById('breathCount').textContent = '4';
+  document.getElementById('breathDesc').textContent = complete
+    ? '4 cycles complete. Nervous system reset. Press Start to repeat.'
+    : 'Stopped. Press Start to begin again.';
+}
+
+// ==================== REACTION DRILL ====================
+let reactionMode = 'raw';
+let reactionState = 'idle'; // idle, waiting, ready, go
+let reactionTimeout = null;
+let reactionStart = null;
+let pauseTarget = 2000;
+
+function setReactionMode(mode, btn) {
+  reactionMode = mode;
+  document.querySelectorAll('.target-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  resetReaction();
+}
+
+function resetReaction() {
+  clearTimeout(reactionTimeout);
+  reactionState = 'idle';
+  const zone = document.getElementById('reactionZone');
+  zone.className = 'reaction-zone waiting';
+  document.getElementById('reactionText').textContent = 'TAP TO PRIME';
+  document.getElementById('reactionResult').classList.remove('show');
+}
+
+function reactionTap() {
+  if (reactionState === 'idle') {
+    // Prime
+    reactionState = 'waiting';
+    const zone = document.getElementById('reactionZone');
+    zone.className = 'reaction-zone ready';
+    document.getElementById('reactionText').textContent = reactionMode === 'raw' ? 'WAIT...' : 'WAIT...';
+    document.getElementById('reactionResult').classList.remove('show');
+    const delay = 1500 + Math.random() * 3000;
+    reactionTimeout = setTimeout(() => {
+      reactionState = 'go';
+      reactionStart = Date.now();
+      zone.className = 'reaction-zone go';
+      document.getElementById('reactionText').textContent = reactionMode === 'raw' ? 'TAP NOW!' : 'WAIT 2 SEC THEN TAP';
+    }, delay);
+    return;
+  }
+
+  if (reactionState === 'waiting') {
+    // Too early
+    clearTimeout(reactionTimeout);
+    document.getElementById('reactionText').textContent = 'TOO EARLY — RETRY';
+    document.getElementById('reactionZone').className = 'reaction-zone waiting';
+    reactionState = 'idle';
+    return;
+  }
+
+  if (reactionState === 'go') {
+    const elapsed = Date.now() - reactionStart;
+    reactionState = 'idle';
+    showReactionResult(elapsed);
+  }
+}
+
+function showReactionResult(ms) {
+  const resultBox = document.getElementById('reactionResult');
+  const scoreEl = document.getElementById('reactionScore');
+  const detailEl = document.getElementById('reactionDetail');
+  const zone = document.getElementById('reactionZone');
+  zone.className = 'reaction-zone waiting';
+  document.getElementById('reactionText').textContent = 'TAP TO PRIME';
+
+  state.reactionTimes.push(ms);
+
+  if (reactionMode === 'raw') {
+    const grade = ms < 200 ? 'great' : ms < 300 ? 'ok' : 'miss';
+    scoreEl.textContent = ms + 'ms';
+    scoreEl.className = 'result-score ' + grade;
+    detailEl.textContent = ms < 200 ? 'SHARP — ELITE REACTION' : ms < 300 ? 'GOOD — WITHIN NORMAL' : 'SLOW — KEEP TRAINING';
+  } else {
+    const diff = Math.abs(ms - 2000);
+    const grade = diff < 200 ? 'great' : diff < 500 ? 'ok' : 'miss';
+    scoreEl.textContent = (ms/1000).toFixed(2) + 's';
+    scoreEl.className = 'result-score ' + grade;
+    detailEl.textContent = `TARGET: 2.0s | YOUR PAUSE: ${(ms/1000).toFixed(2)}s | ERROR: ${diff < 200 ? '✓ LOCKED' : diff + 'ms off'}`;
+  }
+  resultBox.classList.add('show');
+
+  // Log
+  const container = document.getElementById('reactionHistory');
+  const blank = container.querySelector('div');
+  if (blank && blank.textContent.includes('No entries')) blank.remove();
+  const entry = document.createElement('div');
+  entry.className = 'history-entry';
+  const grade2 = reactionMode === 'raw'
+    ? (ms < 200 ? 'great' : ms < 300 ? 'ok' : 'miss')
+    : (Math.abs(ms-2000) < 200 ? 'great' : Math.abs(ms-2000) < 500 ? 'ok' : 'miss');
+  entry.innerHTML = `
+    <span style="color:var(--muted)">${reactionMode.toUpperCase()}</span>
+    <span style="color:var(--text)">${ms}ms</span>
+    <span class="entry-diff ${grade2}">${grade2.toUpperCase()}</span>
+  `;
+  container.insertBefore(entry, container.firstChild);
+}
+
+// ==================== ROOM READING SCENARIOS ====================
+const scenarios = [
+  {
+    text: "You enter a coffee shop. One man near the counter is speaking loudly, gesturing with hands. Three people at nearby tables glance at him occasionally. A woman in the corner keeps her back to a wall, scanning the entrance every 30 seconds.",
+    answers: ["The loud man is in charge here", "The woman in the corner is the most situationally aware person in the room", "The people glancing are friends of the loud man", "The room is completely safe"],
+    correct: 1,
+    explain: "Scanning exits, back to wall — classic trained or naturally alert behavior. The loud man attracts attention but that doesn't mean authority."
+  },
+  {
+    text: "A meeting starts. The senior manager speaks first. Everyone nods. But when there's a disagreement, all eyes briefly move to a quiet man in the corner who hasn't spoken yet.",
+    answers: ["The senior manager has all the authority", "The quiet man has real decision-making power", "The group is confused", "The meeting is about to end"],
+    correct: 1,
+    explain: "Who people look at in uncertainty reveals the real authority. Title and voice aren't always power."
+  },
+  {
+    text: "You walk into a room. Two groups are talking. One group: tight circle, leaning in, low voices. Another group: loose formation, one person with arms crossed, feet pointed toward the exit.",
+    answers: ["Both groups are equally engaged", "The tight circle group is deeply invested in their topic", "The loose group is the more senior one", "Arms crossed always means hostile"],
+    correct: 1,
+    explain: "Tight circle + leaning in = high investment. Feet pointed at exit + crossed arms = mentally already leaving. Arms crossed alone isn't always hostile — context matters."
+  },
+  {
+    text: "Emergency alarm sounds in a building. Most people look around confused. Two people immediately stand and look toward the walls.",
+    answers: ["Those two people are panicking", "Those two people are looking for exit signs", "Those two are the cause of the alarm", "They are waiting for instructions"],
+    correct: 1,
+    explain: "Looking at walls in an emergency = trained exit-awareness. Everyone else is waiting for social cues — they're already acting on prior knowledge."
+  },
+  {
+    text: "A negotiation. The other party says 'We're very flexible on price.' Their arms are crossed. They haven't made eye contact in 2 minutes.",
+    answers: ["They are genuinely flexible", "There's a gap between what they say and how they feel", "They are about to make a big concession", "They are completely comfortable"],
+    correct: 1,
+    explain: "Body language contradicting speech = internal tension. Real flexibility shows in open posture, maintained eye contact. The mismatch is the signal."
+  },
+  {
+    text: "You enter a bar. One man is alone at the bar, drink untouched, periodically checking the door every 60-90 seconds without moving his head much.",
+    answers: ["He is bored", "He is waiting and possibly conducting surveillance or counter-surveillance", "He is an alcoholic", "He is on a date"],
+    correct: 1,
+    explain: "Untouched drink + door-checking without head movement = deliberate low-profile awareness. This is a trained or experienced behavior pattern."
+  },
+];
+
+let currentScenario = -1;
+let answered = false;
+
+function nextScenario() {
+  answered = false;
+  document.getElementById('roomResult').classList.remove('show');
+  currentScenario = (currentScenario + 1) % scenarios.length;
+  const s = scenarios[currentScenario];
+  document.getElementById('scenarioBox').textContent = s.text;
+
+  const grid = document.getElementById('answerGrid');
+  grid.innerHTML = '';
+  s.answers.forEach((ans, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'answer-btn';
+    btn.textContent = ans;
+    btn.onclick = () => checkAnswer(i, s, btn);
+    grid.appendChild(btn);
+  });
+}
+
+function checkAnswer(idx, scenario, btn) {
+  if (answered) return;
+  answered = true;
+  state.roomTotal++;
+
+  const allBtns = document.querySelectorAll('.answer-btn');
+  allBtns[scenario.correct].classList.add('correct');
+
+  const resultBox = document.getElementById('roomResult');
+  const scoreEl = document.getElementById('roomScore');
+  const detailEl = document.getElementById('roomDetail');
+
+  if (idx === scenario.correct) {
+    btn.classList.add('correct');
+    scoreEl.textContent = 'CORRECT READ';
+    scoreEl.className = 'result-score great';
+    state.roomCorrect++;
+  } else {
+    btn.classList.add('wrong');
+    scoreEl.textContent = 'WRONG READ';
+    scoreEl.className = 'result-score miss';
+  }
+
+  detailEl.textContent = scenario.explain;
+  resultBox.classList.add('show');
+}
+
+// ==================== PROGRESS ====================
+function renderProgress() {
+  const grid = document.getElementById('progressGrid');
+  const avgError = state.timeErrors.length
+    ? (state.timeErrors.reduce((a,b) => a + Math.abs(b), 0) / state.timeErrors.length).toFixed(1)
+    : '—';
+  const avgReaction = state.reactionTimes.length
+    ? Math.round(state.reactionTimes.reduce((a,b)=>a+b,0)/state.reactionTimes.length)
+    : '—';
+  const roomAcc = state.roomTotal > 0
+    ? Math.round((state.roomCorrect / state.roomTotal) * 100) + '%'
+    : '—';
+
+  grid.innerHTML = `
+    <div class="progress-stat">
+      <div class="stat-label">Time Drills Done</div>
+      <div class="stat-value">${state.timeDrills}<span> reps</span></div>
+    </div>
+    <div class="progress-stat">
+      <div class="stat-label">Avg Time Error</div>
+      <div class="stat-value">${avgError}<span> sec</span></div>
+    </div>
+    <div class="progress-stat">
+      <div class="stat-label">Breath Cycles</div>
+      <div class="stat-value">${state.breathCycles}<span> cycles</span></div>
+    </div>
+    <div class="progress-stat">
+      <div class="stat-label">Avg Reaction</div>
+      <div class="stat-value">${avgReaction}<span> ms</span></div>
+    </div>
+    <div class="progress-stat">
+      <div class="stat-label">Room Reading Acc</div>
+      <div class="stat-value">${roomAcc}</div>
+    </div>
+    <div class="progress-stat">
+      <div class="stat-label">Total Scenarios</div>
+      <div class="stat-value">${state.roomTotal}<span> done</span></div>
+    </div>
+  `;
+}
+</script>
+</body>
+</html>
