@@ -542,6 +542,111 @@
         .award-num { font-family: 'Barlow Condensed', sans-serif; font-size: 18px; font-weight: 800; color: var(--text-muted); }
         .award-name { font-size: 13px; font-weight: 600; margin-bottom: 2px; }
         .award-desc { font-size: 11.5px; color: var(--text-muted); }
+        /* ── REVISION PAGE STYLES ── */
+        .mantra { background: var(--olive-dark); border-left: 5px solid var(--khaki); border-radius: 6px; padding: 14px 20px; display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+        .mantra-label { font-family: 'Barlow Condensed', sans-serif; font-size: 14px; letter-spacing: 2px; color: var(--khaki); white-space: nowrap; text-transform: uppercase; }
+        .mantra-text { font-size: 15px; font-weight: 500; color: #fff; font-style: italic; }
+        
+        .section-header { display: flex; align-items: center; gap: 10px; margin-bottom: 13px; }
+        .section-badge { font-family: 'Barlow Condensed', sans-serif; font-size: 12px; letter-spacing: 2px; background: var(--olive); color: var(--khaki-light); padding: 3px 8px; border-radius: 3px; text-transform: uppercase; }
+        .section-title { font-family: 'Barlow Condensed', sans-serif; font-size: 24px; letter-spacing: 1px; color: var(--olive-dark); text-transform: uppercase; margin: 0; }
+        
+        .cheat-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+        .cheat-table thead tr { background: var(--olive); }
+        .cheat-table th { color: var(--khaki-light); font-family: 'Barlow Condensed', sans-serif; font-size: 14px; letter-spacing: 1px; padding: 9px 13px; text-align: left; font-weight: 400; text-transform: uppercase; }
+        .cheat-table th:first-child { border-radius: 6px 0 0 0; width: 28px; }
+        .cheat-table th:last-child { border-radius: 0 6px 0 0; }
+        .cheat-table td { padding: 8px 13px; border-bottom: 1px solid var(--border); vertical-align: top; color: var(--text-muted); line-height: 1.55; }
+        .cheat-table tr:nth-child(even) td { background: var(--bg); }
+        .cheat-table td:nth-child(2) { font-weight: 600; color: var(--text); }
+        
+        .formula-strip { background: var(--olive-dark); border-radius: 8px; padding: 14px 16px; display: flex; align-items: center; flex-wrap: wrap; }
+        .formula-step { display: flex; align-items: center; flex: 1; min-width: 90px; }
+        .formula-box { background: rgba(196,169,109,0.18); border: 1.5px solid var(--khaki); border-radius: 5px; padding: 7px 10px; text-align: center; flex: 1; }
+        .formula-box .fb-label { font-family: 'Barlow Condensed', sans-serif; font-size: 18px; letter-spacing: 1px; color: var(--khaki); }
+        .formula-box .fb-sub { font-size: 10px; color: #fff; margin-top: 1px; line-height: 1.3; }
+        .formula-arrow { font-family: 'Barlow Condensed', sans-serif; font-size: 16px; color: var(--olive-light); padding: 0 4px; }
+        
+        .step-list { display: flex; flex-direction: column; gap: 6px; }
+        .step-item { display: flex; align-items: flex-start; gap: 10px; padding: 8px 11px; background: var(--bg); border-radius: 6px; border: 1px solid var(--border); }
+        .step-num { font-family: 'Barlow Condensed', sans-serif; font-size: 18px; color: var(--olive); line-height: 1; min-width: 16px; font-weight: 700; }
+        .step-title { font-weight: 600; font-size: 13px; color: var(--text); margin-bottom: 1px; }
+        .step-desc { font-size: 12px; color: var(--text-muted); line-height: 1.45; }
+        
+        .do-dont { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .do-col { background: #e8f5ec; border: 1px solid #a8d4b0; border-radius: 6px; padding: 11px 13px; }
+        .dont-col { background: #fdeaea; border: 1px solid #f5b8b8; border-radius: 6px; padding: 11px 13px; }
+        .col-header { font-family: 'Barlow Condensed', sans-serif; letter-spacing: 1px; font-size: 13px; margin-bottom: 8px; font-weight: 700; text-transform: uppercase; }
+        .do-col .col-header { color: #27ae60; }
+        .dont-col .col-header { color: #c0392b; }
+        
+        .check-list { list-style: none; display: flex; flex-direction: column; gap: 5px; padding: 0; margin: 0; }
+        .check-list li { font-size: 12.5px; padding-left: 16px; position: relative; line-height: 1.45; color: var(--text-muted); }
+        .do-col .check-list li::before { content: '✓'; position: absolute; left: 0; color: #27ae60; font-weight: 700; font-size: 11px; top: 2px; }
+        .dont-col .check-list li::before { content: '✗'; position: absolute; left: 0; color: #c0392b; font-weight: 700; font-size: 11px; top: 2px; }
+        
+        .example-block { background: var(--olive-dark); border-radius: 6px; padding: 13px 16px; margin-bottom: 10px; }
+        .example-label { font-family: 'Barlow Condensed', sans-serif; font-size: 12px; letter-spacing: 2px; color: var(--khaki); margin-bottom: 6px; text-transform: uppercase; }
+        .example-text { font-size: 13px; color: #fff; line-height: 1.7; font-style: italic; }
+        
+        .alert { border-radius: 6px; padding: 10px 14px; font-size: 13px; font-weight: 500; line-height: 1.55; border-left: 4px solid; margin-bottom: 12px; }
+        .alert-warn { background: #fdf5e6; border-color: #f39c12; color: #8a6a1e; }
+        .alert-tip { background: #e8f5ec; border-color: #27ae60; color: #1e8449; }
+        .alert-danger { background: #fdeaea; border-color: #c0392b; color: #922b21; }
+        
+        .phrase-block { border-radius: 6px; overflow: hidden; border: 1px solid var(--border); margin-bottom: 10px; }
+        .phrase-header { background: var(--olive); padding: 6px 12px; font-family: 'Barlow Condensed', sans-serif; font-size: 13px; letter-spacing: 1px; color: var(--khaki-light); text-transform: uppercase; }
+        .phrase-body { background: var(--bg); padding: 10px 12px; display: flex; flex-direction: column; gap: 5px; }
+        .phrase-line { font-size: 12.5px; color: var(--text); padding-left: 13px; position: relative; line-height: 1.5; }
+        .phrase-line::before { content: '›'; position: absolute; left: 0; color: var(--olive-light); font-size: 14px; top: -1px; }
+        .phrase-note { font-size: 11px; color: var(--text-muted); font-style: italic; margin-top: 4px; padding-top: 5px; border-top: 1px solid var(--border); }
+        
+        .stop-strip { display: flex; border-radius: 8px; overflow: hidden; margin-bottom: 14px; }
+        .stop-step { flex: 1; padding: 13px 8px; text-align: center; }
+        .stop-step:nth-child(odd) { background: #922b21; }
+        .stop-step:nth-child(even) { background: var(--olive-dark); }
+        .stop-icon { font-family: 'Barlow Condensed', sans-serif; font-size: 18px; color: #fff; letter-spacing: 1px; font-weight: 700; }
+        .stop-label { font-size: 10px; color: rgba(255,255,255,0.7); margin-top: 3px; line-height: 1.35; }
+        
+        .rules-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px,1fr)); gap: 9px; margin-bottom: 12px; }
+        .rule-card { background: var(--olive-dark); border-radius: 8px; padding: 13px; text-align: center; }
+        .rule-number { font-family: 'Barlow Condensed', sans-serif; font-size: 32px; color: rgba(196,169,109,0.4); line-height: 1; margin-bottom: 5px; font-weight: 800; }
+        .rule-text { font-size: 12.5px; font-weight: 500; color: #fff; line-height: 1.5; }
+        
+        .checklist { display: flex; flex-direction: column; gap: 7px; }
+        .check-item { display: flex; align-items: flex-start; gap: 11px; padding: 9px 13px; background: var(--bg); border-radius: 6px; border: 1px solid var(--border); cursor: pointer; user-select: none; transition: background 0.15s; }
+        .check-item:hover { background: var(--card); }
+        .check-item input[type=checkbox] { width: 15px; height: 15px; accent-color: var(--olive); margin-top: 2px; flex-shrink: 0; cursor: pointer; }
+        .check-item label { font-size: 13px; color: var(--text); line-height: 1.5; cursor: pointer; flex: 1; }
+        .check-item.checked label { text-decoration: line-through; color: var(--text-muted); }
+
+        /* ── LEC TIMELINE ── */
+        .lec-timeline { display: flex; flex-direction: column; }
+        .lec-item { display: flex; gap: 12px; position: relative; }
+        .lec-item:not(:last-child)::after { content: ''; position: absolute; left: 16px; top: 34px; bottom: -5px; width: 2px; background: var(--border); }
+        .lec-dot { width: 34px; height: 34px; border-radius: 50%; background: var(--olive); color: #fff; font-family: 'Barlow Condensed', sans-serif; font-size: 14px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; z-index: 1; }
+        .lec-body { padding-bottom: 14px; flex: 1; }
+        .lec-title { font-weight: 600; font-size: 13px; color: var(--text); margin-bottom: 2px; }
+        .lec-time { font-size: 10px; color: var(--khaki); font-weight: 600; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 2px; }
+        .lec-desc { font-size: 12px; color: var(--text-muted); line-height: 1.45; }
+
+        /* ── COMPARE TABLE ── */
+        .compare-table { width: 100%; border-collapse: collapse; font-size: 12px; border-radius: 6px; overflow: hidden; }
+        .compare-table th { background: var(--olive); color: var(--olive-pale); font-family: 'Barlow Condensed', sans-serif; font-size: 12px; letter-spacing: 1.5px; padding: 8px 12px; text-align: left; font-weight: 600; text-transform: uppercase; }
+        .compare-table td { padding: 7px 12px; border-bottom: 1px solid var(--border); vertical-align: top; color: var(--text-muted); line-height: 1.45; }
+        .compare-table tr:last-child td { border-bottom: none; }
+        .compare-table tr:nth-child(even) td { background: var(--bg); }
+        .compare-table td:first-child { font-weight: 600; color: var(--text); white-space: nowrap; }
+
+        /* ── SPEAK RULES ── */
+        .speak-rule { display: flex; align-items: flex-start; gap: 10px; padding: 8px 11px; background: var(--bg); border-radius: 6px; border: 1px solid var(--border); margin-bottom: 6px; }
+        .speak-rule-icon { font-family: 'Barlow Condensed', sans-serif; font-size: 18px; font-weight: 800; color: var(--khaki); min-width: 18px; line-height: 1.2; }
+        .speak-rule-text { font-size: 12.5px; color: var(--text-muted); line-height: 1.5; }
+        .speak-rule-text strong { color: var(--text); }
+
+        /* ── ONE-LINER GRID ── */
+        .oneliner-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px,1fr)); gap: 9px; margin-top: 13px; }
+        .oneliner { background: var(--olive-dark); border-radius: 6px; padding: 13px 15px; font-size: 13.5px; font-weight: 500; color: #fff; font-style: italic; line-height: 1.5; border-left: 3px solid var(--khaki); }
     </style>
 </head>
 <body>
@@ -560,6 +665,7 @@
         <option value="leadership-policy">Leadership & Policy</option>
         <option value="defence-tech">CAPF & Def-Tech</option>
         <option value="flashcards">Flashcards</option>
+        <option value="last-minute-revision">Last-Minute Revision</option>
     </select>
 </div>
 
@@ -589,6 +695,7 @@
 
         <div class="sidebar-section-label">Practice</div>
         <button class="nav-item" onclick="navigate('flashcards')"><span class="icon">⚡</span> Flashcards</button>
+        <button class="nav-item" onclick="navigate('last-minute-revision')"><span class="icon">⏱️</span> Last-Minute Revision</button>
     </nav>
 </aside>
 
@@ -1746,6 +1853,391 @@
         <div id="flashcard-container" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;"></div>
     </section>
 
+    <section id="last-minute-revision" class="view">
+        <div class="page-header">
+            <h1>Last-Minute Revision</h1>
+            <p>Your ultimate pre-test reference. Cheat sheets, formulas, test tactics, and mindset rules — everything in one place.</p>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:7px;margin-bottom:24px;">
+            <div class="mantra">
+                <div class="mantra-label">Formula</div>
+                <div class="mantra-text">"Someone + Problem + I Act + Result" — Every story, every answer.</div>
+            </div>
+            <div class="mantra" style="border-left-color:#c0392b;">
+                <div class="mantra-label" style="color:#f5b8b8;">Core Rule</div>
+                <div class="mantra-text">Point → one support → STOP. &nbsp;|&nbsp; 1 idea = 1 sentence. &nbsp;|&nbsp; Short = Strong. &nbsp;|&nbsp; Clear + done > perfect + late.</div>
+            </div>
+        </div>
+
+        <!-- MINDSET -->
+        <div class="section-header">
+            <span class="section-badge">Mindset</span>
+            <h2 class="section-title">What SSB Actually Tests</h2>
+        </div>
+        <div class="grid-3" style="margin-bottom:12px;">
+            <div class="card" style="border-top:3px solid var(--khaki);">
+                <div class="card-title">Not Superhuman</div>
+                <p style="font-size:13px;color:var(--text-muted);line-height:1.6;"><strong style="color:var(--text);">Confidence + Clarity + Control.</strong> Be a normal capable person. No war hero.</p>
+            </div>
+            <div class="card" style="border-top:3px solid var(--olive-light);">
+                <div class="card-title">Your Real Problem</div>
+                <p style="font-size:13px;color:var(--text-muted);line-height:1.6;"><strong style="color:var(--text);">Retrieval under pressure</strong>, not intelligence. Relax → Recall → Respond. You know it.</p>
+            </div>
+            <div class="card" style="border-top:3px solid #c0392b;">
+                <div class="card-title">Officer = Manager</div>
+                <p style="font-size:13px;color:var(--text-muted);line-height:1.6;">Delegate, organize, lead. Cannot monitor everything personally. <strong style="color:var(--text);">Think: offload to team.</strong></p>
+            </div>
+        </div>
+        <div class="alert alert-tip" style="margin-bottom:24px;"><strong>Relaxation trigger:</strong> Imagine your chair playing Valorant — focused, comfortable, zero over-analysis. Bring that state in with you.</div>
+
+        <!-- CHEAT SHEET -->
+        <div class="section-header">
+            <span class="section-badge">Cheat Sheet</span>
+            <h2 class="section-title">Ready Answers</h2>
+        </div>
+        <div class="alert alert-warn"><strong>Rule:</strong> 2–3 sentences max, then stop. If asked "why?" again: "Mainly because it matches my personality and interest." → stop.</div>
+        <div class="card" style="padding:0;overflow:hidden;margin-bottom:24px;">
+            <div style="overflow-x:auto;">
+                <table class="cheat-table">
+                    <thead><tr><th>#</th><th>Question</th><th>Your Answer</th></tr></thead>
+                    <tbody>
+                        <tr><td>01</td><td>Self Intro</td><td>I am Sumit. I have completed my Computer Science education. I am interested in technology and also aspire to join the Armed Forces.</td></tr>
+                        <tr><td>02</td><td>Why Army?</td><td>I want a disciplined and challenging environment where I can contribute to the nation and grow personally.</td></tr>
+                        <tr><td>03</td><td>Strengths</td><td>Adaptability, mental toughness, and a problem-solving approach.</td></tr>
+                        <tr><td>04</td><td>Weakness</td><td>I sometimes overanalyze situations, but I am working on it by taking quicker, practical decisions.</td></tr>
+                        <tr><td>05</td><td>Failure</td><td>I couldn't clear JEE, but I learned consistency and better planning from it.</td></tr>
+                        <tr><td>06</td><td>Others think</td><td>They find me calm, approachable, and lively in nature.</td></tr>
+                        <tr><td>07</td><td>Free time</td><td>Reading, revising what I learn, and improving technical skills through small projects.</td></tr>
+                        <tr><td>08</td><td>Stress handling</td><td>I prioritize tasks and focus on what is important first.</td></tr>
+                        <tr><td>09</td><td>If not selected</td><td>I will analyze my mistakes, improve myself, and try again.</td></tr>
+                        <tr><td>10</td><td>Challenging situation</td><td>Led a 10-member college project. Few were contributing, one created conflict. I assigned clear roles, addressed the issue directly, kept the team focused. Conflict resolved, project completed successfully.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- PPDT / TAT -->
+        <div class="section-header">
+            <span class="section-badge">Test 01 &amp; 02</span>
+            <h2 class="section-title">PPDT / TAT — Story Structure</h2>
+        </div>
+        <div class="grid-2" style="margin-bottom:24px;">
+            <div>
+                <div style="font-family:'Barlow Condensed',sans-serif;letter-spacing:1px;font-weight:700;color:var(--olive);font-size:14px;margin-bottom:9px;">4-BEAT FORMULA — 100 WORDS · 60 SEC</div>
+                <div class="formula-strip">
+                    <div class="formula-step"><div class="formula-box"><div class="fb-label">C</div><div class="fb-sub">Character<br>Who</div></div><div class="formula-arrow">→</div></div>
+                    <div class="formula-step"><div class="formula-box"><div class="fb-label">P</div><div class="fb-sub">Problem<br>What</div></div><div class="formula-arrow">→</div></div>
+                    <div class="formula-step"><div class="formula-box"><div class="fb-label">A</div><div class="fb-sub">Action<br>I did</div></div><div class="formula-arrow">→</div></div>
+                    <div class="formula-step"><div class="formula-box"><div class="fb-label">R</div><div class="fb-sub">Result<br>Positive</div></div></div>
+                </div>
+                <div class="alert alert-tip" style="margin-top:9px;"><strong>Main character = YOU.</strong> Show initiative and organization. Subtly.</div>
+                <div class="do-dont" style="margin-top:9px;">
+                    <div class="dont-col">
+                        <div class="col-header">✗ Cut These</div>
+                        <ul class="check-list">
+                            <li>Too many character names</li>
+                            <li>Detailed scenery</li>
+                            <li>Emotional drama</li>
+                            <li>Long conversations</li>
+                            <li>Repeated actions</li>
+                            <li>Fancy vocabulary</li>
+                            <li>War / army hero stories</li>
+                        </ul>
+                    </div>
+                    <div class="do-col">
+                        <div class="col-header">✓ Keep These</div>
+                        <ul class="check-list">
+                            <li>Normal person as hero</li>
+                            <li>Simple direct language</li>
+                            <li>One problem, one action</li>
+                            <li>Positive result always</li>
+                            <li>Facts only — no emotions</li>
+                            <li>TAT: fast writing, structured</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:11px;">
+                <div class="example-block">
+                    <div class="example-label">Model Story — PPDT (60 sec)</div>
+                    <div class="example-text">"This is Aman, a 21-year-old NCC cadet. During heavy rainfall, water entered a nearby village and many families were stranded. Aman assessed the situation, informed local authorities, and formed volunteer teams with villagers. They arranged food packets, shifted elderly people to safer areas, and guided children to a relief camp. With coordinated efforts and timely action, all villagers were safely evacuated."</div>
+                </div>
+                <div class="example-block">
+                    <div class="example-label">Model Story — TAT</div>
+                    <div class="example-text">"Ravi, a college student, saw a road accident. He immediately stopped, called an ambulance, and helped move the injured to safety. Using basic first-aid, he controlled bleeding. Due to their quick response, the injured were stabilized before medical help arrived."</div>
+                </div>
+                <div class="card" style="padding:12px 14px;">
+                    <div class="card-title" style="font-size:11px;">PPDT vs TAT — Same Skill, Different Execution</div>
+                    <table class="compare-table" style="border-radius:4px;overflow:hidden;">
+                        <thead><tr><th>Aspect</th><th>PPDT</th><th>TAT</th></tr></thead>
+                        <tbody>
+                            <tr><td>Format</td><td>Speak 60 sec</td><td>Write fast</td></tr>
+                            <tr><td>Key skill</td><td>Clear speech + group logic</td><td>Structure + initiative</td></tr>
+                            <tr><td>Tests</td><td>Screening traits</td><td>Deep personality</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- WAT -->
+        <div class="section-header">
+            <span class="section-badge">Test 03</span>
+            <h2 class="section-title">WAT — Word Association Test</h2>
+        </div>
+        <div class="grid-2" style="margin-bottom:24px;">
+            <div style="display:flex;flex-direction:column;gap:9px;">
+                <div class="dont-col" style="border-radius:6px;">
+                    <div class="col-header">✗ Never Write</div>
+                    <ul class="check-list">
+                        <li>Preachy — "One should not drink"</li>
+                        <li>Use the word "I"</li>
+                        <li>Negative sentences</li>
+                        <li>Reference to celebrities / known figures</li>
+                        <li>Moral lecturing</li>
+                    </ul>
+                </div>
+                <div class="do-col" style="border-radius:6px;">
+                    <div class="col-header">✓ Always Write</div>
+                    <ul class="check-list">
+                        <li>Reflects your own beliefs and values</li>
+                        <li>Factual sentences of recent happenings</li>
+                        <li>Positive, action-oriented sentences</li>
+                        <li>Shows Urge &amp; Motivation (OLQ)</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-title">Quick Self-Check Before Writing</div>
+                <div class="step-list">
+                    <div class="step-item"><div class="step-num">?</div><div><div class="step-title">Does it reflect MY values?</div><div class="step-desc">Not what society says — what you believe and act on</div></div></div>
+                    <div class="step-item"><div class="step-num">?</div><div><div class="step-title">Is it positive?</div><div class="step-desc">Even a negative word — find a constructive angle</div></div></div>
+                    <div class="step-item"><div class="step-num">?</div><div><div class="step-title">Is it factual / action-oriented?</div><div class="step-desc">Ground it in reality — not abstract philosophy</div></div></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- LECTURETTE -->
+        <div class="section-header">
+            <span class="section-badge">Test 04</span>
+            <h2 class="section-title">Lecturette</h2>
+        </div>
+        <div class="grid-2" style="margin-bottom:24px;">
+            <div class="card">
+                <div class="card-title">Skeleton — to Convince (Argumentative)</div>
+                <div class="lec-timeline">
+                    <div class="lec-item"><div class="lec-dot">1</div><div class="lec-body"><div class="lec-title">Intro</div><div class="lec-time">~20 sec</div><div class="lec-desc">Hook audience. State topic clearly.</div></div></div>
+                    <div class="lec-item"><div class="lec-dot">2</div><div class="lec-body"><div class="lec-title">Problem</div><div class="lec-time">~40 sec</div><div class="lec-desc">Explain the issue and why it matters.</div></div></div>
+                    <div class="lec-item"><div class="lec-dot">3</div><div class="lec-body"><div class="lec-title">Cause</div><div class="lec-time">~20 sec</div><div class="lec-desc">Root causes — keep it simple.</div></div></div>
+                    <div class="lec-item"><div class="lec-dot">4</div><div class="lec-body"><div class="lec-title">Pros &amp; Cons</div><div class="lec-time">~60 sec</div><div class="lec-desc">Analyze both sides — shows balance and objectivity.</div></div></div>
+                    <div class="lec-item"><div class="lec-dot">5</div><div class="lec-body"><div class="lec-title">Solution</div><div class="lec-time">~40 sec</div><div class="lec-desc">Your recommendation. State your answer.</div></div></div>
+                    <div class="lec-item"><div class="lec-dot">6</div><div class="lec-body"><div class="lec-title">Conclusion</div><div class="lec-time">~20 sec</div><div class="lec-desc">Summarize key points. Close strong.</div></div></div>
+                </div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:11px;">
+                <div class="card">
+                    <div class="card-title">Delivery Checklist</div>
+                    <ul class="check-list" style="list-style:none;display:flex;flex-direction:column;gap:5px;padding:0;margin:0;">
+                        <li style="padding-left:18px;position:relative;font-size:13px;color:var(--text-muted);"><span style="position:absolute;left:0;color:var(--olive);font-size:14px;top:0;">☐</span>Eye contact — not at the board</li>
+                        <li style="padding-left:18px;position:relative;font-size:13px;color:var(--text-muted);"><span style="position:absolute;left:0;color:var(--olive);font-size:14px;top:0;">☐</span>Good posture, open body language</li>
+                        <li style="padding-left:18px;position:relative;font-size:13px;color:var(--text-muted);"><span style="position:absolute;left:0;color:var(--olive);font-size:14px;top:0;">☐</span>Pitch modulation — not monotone</li>
+                        <li style="padding-left:18px;position:relative;font-size:13px;color:var(--text-muted);"><span style="position:absolute;left:0;color:var(--olive);font-size:14px;top:0;">☐</span>Water = confidence booster, use it</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <div class="card-title">Which Style to Use?</div>
+                    <div style="display:flex;flex-direction:column;gap:7px;">
+                        <div style="padding:9px 11px;background:var(--bg);border-radius:5px;border-left:3px solid var(--olive);">
+                            <div style="font-size:12px;font-weight:600;color:var(--text);margin-bottom:2px;">Answer First (Pyramid)</div>
+                            <div style="font-size:12px;color:var(--text-muted);">Time pressure · Want them to follow · State position → 2–4 points → facts.</div>
+                        </div>
+                        <div style="padding:9px 11px;background:var(--bg);border-radius:5px;border-left:3px solid var(--khaki);">
+                            <div style="font-size:12px;font-weight:600;color:var(--text);margin-bottom:2px;">Lecturette Skeleton</div>
+                            <div style="font-size:12px;color:var(--text-muted);">Need to convince · Build up the case · Intro → Problem → Solution.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PHRASES -->
+        <div class="section-header">
+            <span class="section-badge">Phrases</span>
+            <h2 class="section-title">GD / Interview / GTO / PPDT Phrases</h2>
+        </div>
+        <div class="grid-2" style="margin-bottom:14px;">
+            <div>
+                <div class="phrase-block">
+                    <div class="phrase-header">GD — Group Discussion</div>
+                    <div class="phrase-body">
+                        <div class="phrase-line">Open: "I think the main point is ___."</div>
+                        <div class="phrase-line">Open: "From my perspective, ___ is important."</div>
+                        <div class="phrase-line">Middle: "One reason is ___." / "Another angle is ___."</div>
+                        <div class="phrase-line">Close: "So overall, ___ is the key factor."</div>
+                        <div class="phrase-note">Speak max 2–3 times · 1 idea per turn · Don't repeat others · No stories</div>
+                    </div>
+                </div>
+                <div class="phrase-block">
+                    <div class="phrase-header">Interview</div>
+                    <div class="phrase-body">
+                        <div class="phrase-line">Formula: Direct answer → one reason → stop.</div>
+                        <div class="phrase-line">If pushed again: "Mainly because it matches my personality and interest." → stop.</div>
+                        <div class="phrase-note">Never over-justify. Clear + done > perfect + late.</div>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <div class="phrase-block">
+                    <div class="phrase-header">GTO — Group Tasks</div>
+                    <div class="phrase-body">
+                        <div class="phrase-line">"Let's use this route."</div>
+                        <div class="phrase-line">"You take left, I'll take right."</div>
+                        <div class="phrase-line">"This is faster, try this."</div>
+                        <div class="phrase-note">Speak only to move the task forward. Never explain your thinking out loud.</div>
+                    </div>
+                </div>
+                <div class="phrase-block">
+                    <div class="phrase-header">PPDT — Group Phase</div>
+                    <div class="phrase-body">
+                        <div class="phrase-line">Max 6 lines in story</div>
+                        <div class="phrase-line">Situation → Problem → Action → Result</div>
+                        <div class="phrase-line">Action-based only. No emotional language.</div>
+                        <div class="phrase-note">Group: clear, logical, not over-elaborate. Listen first.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div style="font-family:'Barlow Condensed',sans-serif;letter-spacing:1.5px;font-weight:700;color:var(--olive);font-size:13px;text-transform:uppercase;margin-bottom:9px;">Master Do &amp; Don't</div>
+        <div class="do-dont" style="margin-bottom:24px;">
+            <div class="do-col">
+                <div class="col-header">✓ Always Do</div>
+                <ul class="check-list">
+                    <li>Speak in 1–3 sentences</li>
+                    <li>Stay calm under pressure</li>
+                    <li>Decide quickly and practically</li>
+                    <li>Be honest and consistent</li>
+                    <li>Listen more than you speak</li>
+                    <li>Confident body language, eye contact</li>
+                    <li>Same personality across all tasks</li>
+                    <li>Admit weakness simply + show improvement</li>
+                </ul>
+            </div>
+            <div class="dont-col">
+                <div class="col-header">✗ Never Do</div>
+                <ul class="check-list">
+                    <li>Over-explain</li>
+                    <li>Argue or get irritated</li>
+                    <li>Overthink / hesitate</li>
+                    <li>Use scripted / fake answers</li>
+                    <li>Interrupt or dominate</li>
+                    <li>Slouch / fidget</li>
+                    <li>Behave differently in different tests</li>
+                    <li>Claim weakness is already fixed</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- VOICE & CONFIDENCE -->
+        <div class="section-header">
+            <span class="section-badge">Delivery</span>
+            <h2 class="section-title">Voice &amp; Confidence</h2>
+        </div>
+        <div class="alert alert-danger"><strong>Bad English won't hurt — but these 4 will:</strong> Freezing · Becoming silent · Losing thought flow · Low confidence under pressure</div>
+        <div class="grid-2" style="margin-bottom:24px;">
+            <div class="card">
+                <div class="card-title">Speak From Your Diaphragm</div>
+                <div style="display:flex;flex-direction:column;gap:6px;">
+                    <div style="display:flex;align-items:center;gap:9px;padding:7px 10px;background:var(--bg);border-radius:5px;"><span style="font-size:15px;">💨</span><div style="font-size:12.5px;color:var(--text-muted);">Relax + breathe deep before speaking</div></div>
+                    <div style="display:flex;align-items:center;gap:9px;padding:7px 10px;background:var(--bg);border-radius:5px;"><span style="font-size:15px;">👄</span><div style="font-size:12.5px;color:var(--text-muted);">Open your mouth slightly more while speaking</div></div>
+                    <div style="display:flex;align-items:center;gap:9px;padding:7px 10px;background:var(--bg);border-radius:5px;"><span style="font-size:15px;">🐢</span><div style="font-size:12.5px;color:var(--text-muted);">Slow down — don't rush</div></div>
+                    <div style="display:flex;align-items:center;gap:9px;padding:7px 10px;background:var(--bg);border-radius:5px;"><span style="font-size:15px;">🎯</span><div style="font-size:12.5px;color:var(--text-muted);">Emphasize key words — don't raise overall volume</div></div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-title">Speak Less, Win More</div>
+                <div class="speak-rule"><div class="speak-rule-icon">1</div><div class="speak-rule-text"><strong>1 idea = 1 sentence.</strong> Then stop.</div></div>
+                <div class="speak-rule"><div class="speak-rule-icon">2</div><div class="speak-rule-text"><strong>Max 2–3 sentences</strong> per answer. No "because…" chains.</div></div>
+                <div class="speak-rule"><div class="speak-rule-icon">3</div><div class="speak-rule-text"><strong>One explanation per topic only.</strong> Never repeat or rephrase.</div></div>
+                <div class="speak-rule"><div class="speak-rule-icon">4</div><div class="speak-rule-text">If too long <strong>to say in one breath</strong> → it's too complex.</div></div>
+                <div class="speak-rule"><div class="speak-rule-icon">5</div><div class="speak-rule-text"><strong>Clear + done > perfect + late.</strong></div></div>
+            </div>
+        </div>
+
+        <!-- ANGER & EMOTION CONTROL -->
+        <div class="section-header">
+            <span class="section-badge">Pressure</span>
+            <h2 class="section-title">Anger &amp; Emotion Control</h2>
+        </div>
+        <div class="stop-strip" style="margin-bottom:14px;">
+            <div class="stop-step"><div class="stop-icon">STOP</div><div class="stop-label">Stop speaking<br>immediately</div></div>
+            <div class="stop-step"><div class="stop-icon">STEP BACK</div><div class="stop-label">Physically,<br>if possible</div></div>
+            <div class="stop-step"><div class="stop-icon">ONE LINE</div><div class="stop-label">"Give me a moment." /<br>"Okay." / "I'll check."</div></div>
+            <div class="stop-step"><div class="stop-icon">RESET</div><div class="stop-label">4 in / 6–8 out.<br>Return when calm.</div></div>
+        </div>
+        <div class="grid-2" style="margin-bottom:24px;">
+            <div class="alert alert-danger" style="margin-bottom:0;"><strong>No debate · No correction · No argument</strong> while activated. Return only when fully calm.</div>
+            <div class="alert alert-tip" style="margin-bottom:0;">Reset options: Long exhale (4 in / 6–8 out) · Slow walk · Cold water · Silence.</div>
+        </div>
+
+        <!-- LAST 10 MINUTES -->
+        <div class="section-header">
+            <span class="section-badge">Pre-Interview</span>
+            <h2 class="section-title">Last 10 Minutes Before Interview</h2>
+        </div>
+        <div class="grid-2" style="margin-bottom:24px;">
+            <div class="card">
+                <div class="card-title">Tick Off Before Walking In</div>
+                <div class="checklist">
+                    <div class="check-item" onclick="toggleCheck(this)"><input type="checkbox"><label>Take 3 long exhales — 4 in / 6–8 out</label></div>
+                    <div class="check-item" onclick="toggleCheck(this)"><input type="checkbox"><label>Repeat: "Speak less. Stay calm. Respond clearly."</label></div>
+                    <div class="check-item" onclick="toggleCheck(this)"><input type="checkbox"><label>Recall self-intro once — 2–3 lines only</label></div>
+                    <div class="check-item" onclick="toggleCheck(this)"><input type="checkbox"><label>Sit / stand straight, shoulders relaxed</label></div>
+                    <div class="check-item" onclick="toggleCheck(this)"><input type="checkbox"><label>Smile slightly, soft eye contact ready</label></div>
+                    <div class="check-item" onclick="toggleCheck(this)"><input type="checkbox"><label>Decided: 1 idea = 1 sentence. Then stop.</label></div>
+                    <div class="check-item" onclick="toggleCheck(this)"><input type="checkbox"><label>No rehearsing now — trust your preparation</label></div>
+                </div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:10px;">
+                <div class="mantra" style="border-left-color:var(--khaki);">
+                    <div class="mantra-label">Final Mindset</div>
+                    <div class="mantra-text">"I will speak less, stay calm, and respond clearly."</div>
+                </div>
+                <div class="alert alert-warn"><strong>SSB tests behavior, not knowledge.</strong> Your prep is done. Now just be yourself — calmly, clearly, consistently.</div>
+                <div class="card" style="padding:12px 15px;">
+                    <div class="card-title" style="font-size:11px;">On Weaknesses in Interview</div>
+                    <div class="step-list">
+                        <div class="step-item"><div class="step-num">1</div><div><div class="step-title">Keep it simple</div><div class="step-desc">Don't over-explain or deep-justify</div></div></div>
+                        <div class="step-item"><div class="step-num">2</div><div><div class="step-title">Make it real and human</div><div class="step-desc">Avoid clichéd "I work too hard" answers</div></div></div>
+                        <div class="step-item"><div class="step-num">3</div><div><div class="step-title">Show improvement efforts</div><div class="step-desc">"I'm working on it by…" — not "it's fixed"</div></div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- GOLDEN RULES -->
+        <div class="section-header">
+            <span class="section-badge">Final Brief</span>
+            <h2 class="section-title">Golden Rules</h2>
+        </div>
+        <div class="rules-grid">
+            <div class="rule-card"><div class="rule-number">01</div><div class="rule-text">Point → one support → STOP. Always.</div></div>
+            <div class="rule-card"><div class="rule-number">02</div><div class="rule-text">Normal person as hero. Not a superhuman soldier.</div></div>
+            <div class="rule-card"><div class="rule-number">03</div><div class="rule-text">Cut emotional words. Facts and actions only.</div></div>
+            <div class="rule-card"><div class="rule-number">04</div><div class="rule-text">Delegate &amp; organize. Think like a manager.</div></div>
+            <div class="rule-card"><div class="rule-number">05</div><div class="rule-text">Retrieval under pressure is the challenge — not intelligence.</div></div>
+            <div class="rule-card"><div class="rule-number">06</div><div class="rule-text">Relax, breathe, slow down. Speak from your diaphragm.</div></div>
+            <div class="rule-card"><div class="rule-number">07</div><div class="rule-text">Same behavior across ALL tests. Consistency = credibility.</div></div>
+            <div class="rule-card"><div class="rule-number">08</div><div class="rule-text">Clear + Confident + Controlled. That's the only target.</div></div>
+        </div>
+        <div class="oneliner-grid">
+            <div class="oneliner">Short = Strong. Long = Weak under pressure.</div>
+            <div class="oneliner">Clarity > Complexity. Every single time.</div>
+            <div class="oneliner">Over-explaining is the only real enemy. Control it — you're already strong.</div>
+            <div class="oneliner">SSB tests behavior, not knowledge.</div>
+        </div>
+    </section>
+
 </main>
 
 <script>
@@ -1915,6 +2407,22 @@ function initChart() {
 // ── Init
 document.addEventListener('DOMContentLoaded', () => {
     renderCards();
+});
+
+// ── Last-Minute Revision Checklist Toggle
+function toggleCheck(item) {
+    const cb = item.querySelector('input[type=checkbox]');
+    cb.checked = !cb.checked;
+    item.classList.toggle('checked', cb.checked);
+}
+// Attach listeners to checkboxes so clicking them directly also works
+document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.check-item input').forEach(cb => {
+        cb.addEventListener('click', e => e.stopPropagation());
+        cb.addEventListener('change', function() {
+            this.closest('.check-item').classList.toggle('checked', this.checked);
+        });
+    });
 });
 </script>
 </body>
