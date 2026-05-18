@@ -647,6 +647,67 @@
         /* ── ONE-LINER GRID ── */
         .oneliner-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px,1fr)); gap: 9px; margin-top: 13px; }
         .oneliner { background: var(--olive-dark); border-radius: 6px; padding: 13px 15px; font-size: 13.5px; font-weight: 500; color: #fff; font-style: italic; line-height: 1.5; border-left: 3px solid var(--khaki); }
+
+        /* ── PERSONAL COMBAT NOTES ── */
+        .pcn-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px,1fr)); gap: 11px; margin-bottom: 24px; }
+        .pcn-card {
+            background: var(--olive-dark);
+            border: 1px solid rgba(196,169,109,0.2);
+            border-radius: 10px;
+            padding: 16px 18px;
+            position: relative;
+            overflow: hidden;
+        }
+        .pcn-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+            background: var(--khaki);
+        }
+        .pcn-num {
+            font-family: 'Barlow Condensed', sans-serif;
+            font-size: 36px;
+            font-weight: 800;
+            color: rgba(196,169,109,0.18);
+            line-height: 1;
+            position: absolute;
+            top: 10px; right: 14px;
+        }
+        .pcn-tag {
+            font-family: 'Barlow Condensed', sans-serif;
+            font-size: 9px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--khaki);
+            margin-bottom: 6px;
+        }
+        .pcn-title {
+            font-family: 'Barlow Condensed', sans-serif;
+            font-size: 17px;
+            font-weight: 700;
+            color: #fff;
+            letter-spacing: 0.3px;
+            margin-bottom: 7px;
+            line-height: 1.2;
+        }
+        .pcn-body {
+            font-size: 12.5px;
+            color: rgba(255,255,255,0.72);
+            line-height: 1.65;
+        }
+        .pcn-body strong { color: #fff; }
+        .pcn-body em { color: var(--khaki); font-style: normal; font-weight: 600; }
+        .pcn-quote {
+            margin-top: 9px;
+            border-top: 1px solid rgba(196,169,109,0.2);
+            padding-top: 8px;
+            font-size: 11.5px;
+            color: var(--khaki);
+            font-style: italic;
+            line-height: 1.5;
+        }
     </style>
 </head>
 <body>
@@ -1868,6 +1929,88 @@
                 <div class="mantra-label" style="color:#f5b8b8;">Core Rule</div>
                 <div class="mantra-text">Point → one support → STOP. &nbsp;|&nbsp; 1 idea = 1 sentence. &nbsp;|&nbsp; Short = Strong. &nbsp;|&nbsp; Clear + done > perfect + late.</div>
             </div>
+        </div>
+
+        <!-- PERSONAL COMBAT NOTES -->
+        <div class="section-header">
+            <span class="section-badge" style="background:#8b2a2a;">Personal</span>
+            <h2 class="section-title">Sumit's Combat Notes</h2>
+        </div>
+        <div class="pcn-grid">
+
+            <!-- 1: Story Formula -->
+            <div class="pcn-card">
+                <div class="pcn-num">01</div>
+                <div class="pcn-tag">Story / Answer Formula</div>
+                <div class="pcn-title">Someone → Problem → Act → Result</div>
+                <div class="pcn-body">
+                    Build a <strong>coherent narrative</strong> — weave <em>past context</em>, <em>present action</em>, and <em>future outcome</em> where possible. Planning counts: show the character thought, then acted.<br><br>
+                    "Someone + Problem/Planning + <strong>I / He / She Act</strong> + Result" — for every story and every answer, every time.
+                </div>
+            </div>
+
+            <!-- 2: Smile -->
+            <div class="pcn-card">
+                <div class="pcn-num">02</div>
+                <div class="pcn-tag">Disposition</div>
+                <div class="pcn-title">Keep the Smiling Disposition</div>
+                <div class="pcn-body">
+                    Slight open-mouth smile — <strong>teeth just visible</strong>, natural, never forced. Warm and approachable at all times, even under pressure.<br><br>
+                    <strong>Confidence lives in your face</strong> before it leaves your mouth.
+                </div>
+                <div class="pcn-quote">"Open a little mouth, slight smile — your teeth between looks great." — Maa</div>
+            </div>
+
+            <!-- 3: Group behavior -->
+            <div class="pcn-card">
+                <div class="pcn-num">03</div>
+                <div class="pcn-tag">Group Behavior</div>
+                <div class="pcn-title">Co-operate. Don't Dominate.</div>
+                <div class="pcn-body">
+                    Be <em>calm</em>. Don't get excited. Don't talk over people.<br><br>
+                    <strong>Do:</strong> Initiate when no one is moving. Add a genuinely good point. Bring quiet confidence — not noise.<br><br>
+                    The assessors are watching who <em>enables</em> the group, not who shouts the loudest.
+                </div>
+            </div>
+
+            <!-- 4: Energy guard -->
+            <div class="pcn-card">
+                <div class="pcn-num">04</div>
+                <div class="pcn-tag">Energy Management</div>
+                <div class="pcn-title">They Are Acquaintances — Not Friends</div>
+                <div class="pcn-body">
+                    Be polite, be civil — but <strong>do not get close</strong>. Don't let other candidates drain your energy, plant doubt, or shift your strategy with "tips."<br><br>
+                    <em>You have done your prep. You know everything you need to know.</em> Stay inside your own headspace until you walk out recommended.
+                </div>
+                <div class="pcn-quote">Focus on yourself. The only competition is the version of you that second-guesses.</div>
+            </div>
+
+            <!-- 5: Pressure handling -->
+            <div class="pcn-card" style="border-top-color:#c0392b;">
+                <div class="pcn-num">05</div>
+                <div class="pcn-tag">Pressure &amp; Negative Scenarios</div>
+                <div class="pcn-title">Right Is Right. Don't Break.</div>
+                <div class="pcn-body">
+                    They will create impossible-sounding scenarios — situations that feel real but are designed to test your composure, not your knowledge.<br><br>
+                    <strong>If you know the answer → trust it.</strong> Don't explain. Don't defend. <em>Execute.</em> Talk less, decide fast, move forward.<br><br>
+                    Even if every voice in the room pushes back — <strong>believe yourself. Right is right.</strong> A leader's conviction doesn't require group approval.
+                </div>
+                <div class="pcn-quote">"Even if you're about to be rejected — right means right. Don't fold." — Kingsman</div>
+            </div>
+
+            <!-- 6: Short sentences -->
+            <div class="pcn-card">
+                <div class="pcn-num">06</div>
+                <div class="pcn-tag">Communication</div>
+                <div class="pcn-title">Short Sentences. Low Exposure.</div>
+                <div class="pcn-body">
+                    <strong>One idea. One sentence. Stop.</strong><br><br>
+                    Every extra word is a window into something that can be questioned, twisted, or used against your composure. <em>Say what's needed — nothing more.</em><br><br>
+                    Precision is strength. Volume is weakness.
+                </div>
+                <div class="pcn-quote">The less you say, the harder you are to rattle.</div>
+            </div>
+
         </div>
 
         <!-- MINDSET -->
