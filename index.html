@@ -1,122 +1,113 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>0xSquareLaw</title>
-
-    <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>0xSquareLaw</title>
+<meta name="description" content="Portfolio of 0xSquareLaw. Building thoughtful software, one project at a time.">
+<meta property="og:title" content="0xSquareLaw">
+<meta property="og:description" content="Building thoughtful software, one project at a time.">
+<meta name="color-scheme" content="light dark">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232f4bff'/%3E%3Ctext x='16' y='21.5' font-size='15' font-weight='700' text-anchor='middle' fill='white' font-family='monospace'%3E0x%3C/text%3E%3C/svg%3E">
+<!-- Set theme before first paint (no flash). Saved choice wins, otherwise follow the system. -->
+<script>try{var t=localStorage.theme}catch(e){}document.documentElement.dataset.theme=t||(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light')</script>
+<link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <header>
-        <div class="container">
-            <div class="logo">0xSquareLaw</div>
-            <nav>
-                <ul>
-                    <li><a href="#home">Home</a></li>
-                    <li><a href="#about">About</a></li>
-                </ul>
-            </nav>
-            <div class="theme-toggle">
-                <i class="fas fa-moon"></i>
-            </div>
-        </div>
-    </header>
 
-    <section id="home" class="hero">
-        <div class="container">
-            <div class="hero-content">
-                <h1 class="fade-in">Welcome to 0xSquareLaw</h1>
-                <p class="fade-in">Where logic meets magic. That's my workspace.</p>
+<!-- Icon sprite (replaces the Font Awesome download) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-moon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></symbol>
+  <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></symbol>
+  <symbol id="i-mail" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/></symbol>
+  <symbol id="i-file" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8"/></symbol>
+  <symbol id="i-download" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5M12 15V3"/></symbol>
+  <symbol id="i-close" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></symbol>
+  <symbol id="i-github" viewBox="0 0 24 24"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></symbol>
+  <symbol id="i-linkedin" viewBox="0 0 24 24"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></symbol>
+</svg>
 
-                <a href="mailto:contact@0xsquarelaw.tech" class="btn fade-in">
-                    <i class="fas fa-envelope"></i>
-                    Contact Me
-                </a>
+<header>
+  <div class="wrap bar">
+    <a class="logo" href="#">0xSquareLaw</a>
+    <nav>
+      <a href="#about">About</a>
+      <a href="#projects">Projects</a>
+    </nav>
+    <button class="icon" id="theme" type="button" aria-label="Toggle light/dark theme" title="Toggle theme">
+      <svg class="i moon"><use href="#i-moon"/></svg>
+      <svg class="i sun"><use href="#i-sun"/></svg>
+    </button>
+  </div>
+</header>
 
-                <a href="https://github.com/0xsquarelaw/0xsquarelaw.github.io/raw/refs/heads/main/%28uPDATED%29Sumit_Kumar_Singh_Resume_s.pdf"
-                   class="btn fade-in"
-                   target="_blank"
-                   rel="noopener noreferrer">
-                    <i class="fas fa-file-pdf"></i>
-                    View My Resume
-                </a>
-            </div>
-        </div>
-    </section>
+<main>
+  <section class="hero">
+    <div class="wrap">
+      <h1>Where logic<br>meets magic.</h1>
+      <p>That's my workspace.</p>
+      <div class="actions">
+        <a class="btn" href="mailto:contact@0xsquarelaw.tech">
+          <svg class="i"><use href="#i-mail"/></svg>Contact me
+        </a>
+        <!-- Rename the PDF in your repo to resume.pdf -->
+        <a class="btn alt" id="resume" href="resume.pdf" target="_blank" rel="noopener">
+          <svg class="i"><use href="#i-file"/></svg>View resume
+        </a>
+      </div>
+    </div>
+  </section>
 
-    <section id="about" class="about">
-        <div class="container">
-            <h2>About Us</h2>
+  <section id="about">
+    <div class="wrap">
+      <h2>About</h2>
+      <p class="lead">Building thoughtful software, one project at a time.</p>
+      <p>Take a look at the applications I'm crafting – each driven by curiosity and a commitment to creating unique features and engaging user experiences. It's where my passion for technology and innovative design comes to life.</p>
+      <p class="tag">#PixelsWithPurpose</p>
+    </div>
+  </section>
 
-            <div class="about-content">
-                <div class="about-text">
-                    <p>Welcome to my portfolio!</p>
-                    <p>Building thoughtful software, one project at a time.</p>
-                    <p>
-                        Take a look at the applications I'm crafting – each driven by
-                        curiosity and a commitment to creating unique features and
-                        engaging user experiences. It's where my passion for
-                        technology and innovative design comes to life.
-                    </p>
+  <section id="projects">
+    <div class="wrap">
+      <h2>Projects</h2>
+      <ul class="work">
+        <li>
+          <a href="https://ilivewallpaper.pages.dev/" target="_blank" rel="noopener">
+            <img src="ilivewallpaper-icon.png" alt="" width="48" height="48" loading="lazy" decoding="async">
+            <span><b>iLive Wallpaper</b><small>ilivewallpaper.pages.dev</small></span>
+          </a>
+        </li>
+        <li>
+          <a href="https://github.com/0xsquarelaw" target="_blank" rel="noopener">
+            <span class="ico"><svg class="i"><use href="#i-github"/></svg></span>
+            <span><b>More coming soon</b><small>github.com/0xsquarelaw</small></span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </section>
+</main>
 
-                    <div class="hashtags">
-                        <span class="tag">#PixelsWithPurpose</span>
-                    </div>
-                </div>
+<footer>
+  <div class="wrap">
+    <span>&copy; <span id="y">2026</span> 0xSquareLaw</span>
+    <div class="social">
+      <a class="icon" href="https://linkedin.com/in/0xsquarelaw" target="_blank" rel="noopener" aria-label="LinkedIn"><svg class="i"><use href="#i-linkedin"/></svg></a>
+      <a class="icon" href="https://github.com/0xsquarelaw" target="_blank" rel="noopener" aria-label="GitHub"><svg class="i"><use href="#i-github"/></svg></a>
+    </div>
+  </div>
+</footer>
 
-                <div class="about-stats">
-                    <a href="https://ilivewallpaper.pages.dev/" class="stat-link">
-                        <div class="stat-box">
-                            <img src="ilivewallpaper-icon.png" alt="iLive Wallpaper">
-                            <p>iLive Wallpaper</p>
-                        </div>
-                    </a>
+<!-- Resume preview: the PDF only loads when the dialog is opened -->
+<dialog id="pdf" aria-label="Resume preview">
+  <div class="dhead">
+    <b>Resume</b>
+    <a class="icon" href="resume.pdf" download aria-label="Download resume" title="Download"><svg class="i"><use href="#i-download"/></svg></a>
+    <form method="dialog"><button class="icon" aria-label="Close preview" title="Close"><svg class="i"><use href="#i-close"/></svg></button></form>
+  </div>
+  <iframe title="Resume PDF"></iframe>
+</dialog>
 
-                    <a href="https://github.com/0xsquarelaw/" class="stat-link">
-                        <div class="stat-box">
-                            <h3>*</h3>
-                            <p>Coming Soon</p>
-                        </div>
-                    </a>
-
-                    <a href="https://0xsquarelaw.tech/" class="stat-link">
-                        <div class="stat-box">
-                            <h3>/</h3>
-                            <p>Yet to Update</p>
-                        </div>
-                    </a>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <footer>
-        <div class="container">
-            <div class="copyright">
-                <p>&copy; 2025 0xSquareLaw</p>
-            </div>
-
-            <div class="social-icons">
-                <a href="https://linkedin.com/in/0xsquarelaw"
-                   target="_blank"
-                   rel="noopener noreferrer"
-                   aria-label="LinkedIn">
-                    <i class="fab fa-linkedin"></i>
-                </a>
-
-                <a href="https://github.com/0xsquarelaw"
-                   target="_blank"
-                   rel="noopener noreferrer"
-                   aria-label="GitHub">
-                    <i class="fab fa-github"></i>
-                </a>
-            </div>
-        </div>
-    </footer>
-
-    <script src="script.js"></script>
+<script src="script.js"></script>
 </body>
 </html>

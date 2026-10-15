@@ -1,43 +1,27 @@
-document.addEventListener('DOMContentLoaded', function() {
-    // Dark/Light mode toggle
-    const themeToggle = document.querySelector('.theme-toggle');
-    const body = document.body;
-    
-    // Check for saved theme preference or default to dark mode
-    if (localStorage.getItem('theme') !== 'light') {
-        body.classList.add('dark-mode');
-        themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
-        localStorage.setItem('theme', 'dark');
-    } else {
-        themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
-    }
-    
-    themeToggle.addEventListener('click', function() {
-        body.classList.toggle('dark-mode');
-        
-        if (body.classList.contains('dark-mode')) {
-            themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
-            localStorage.setItem('theme', 'dark');
-        } else {
-            themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
-            localStorage.setItem('theme', 'light');
-        }
-    });
-    
-    // Smooth scrolling for navigation links
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function(e) {
-            e.preventDefault();
-            
-            const targetId = this.getAttribute('href');
-            const targetElement = document.querySelector(targetId);
-            
-            if (targetElement) {
-                window.scrollTo({
-                    top: targetElement.offsetTop - 70,
-                    behavior: 'smooth'
-                });
-            }
-        });
-    });
-});
+const $ = s => document.querySelector(s);
+const root = document.documentElement;
+
+// Theme toggle (initial theme is set by the inline script in <head>)
+$('#theme').onclick = () => {
+  const t = root.dataset.theme === 'dark' ? 'light' : 'dark';
+  root.dataset.theme = t;
+  try { localStorage.theme = t; } catch {}
+};
+
+// Footer year
+$('#y').textContent = new Date().getFullYear();
+
+// Resume: preview in a dialog on desktop browsers that can show PDFs inline.
+// Everywhere else (phones, no PDF viewer, ctrl/cmd-click) the link opens the PDF in a new tab.
+const dlg = $('#pdf');
+$('#resume').onclick = e => {
+  if (!navigator.pdfViewerEnabled || !matchMedia('(min-width:700px)').matches ||
+      e.metaKey || e.ctrlKey || e.shiftKey) return;
+  e.preventDefault();
+  const frame = dlg.querySelector('iframe');
+  if (!frame.src) frame.src = e.currentTarget.href + '#view=FitH'; // load PDF only on first open
+  dlg.showModal();
+};
+
+// Click on the dimmed backdrop closes the dialog (Esc and the X button work natively)
+dlg.onclick = e => { if (e.target === dlg) dlg.close(); };
